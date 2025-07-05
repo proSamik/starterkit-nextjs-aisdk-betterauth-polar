@@ -153,7 +153,7 @@ export function AppSidebar({
       <div
         className={cn(
           "mx-auto flex w-full flex-1 flex-col bg-background md:flex-row",
-          "h-screen"
+          "min-h-screen"
         )}
       >
         <Sidebar open={!isCollapsed} setOpen={(open) => {
@@ -162,7 +162,7 @@ export function AppSidebar({
             toggle();
           }
         }}>
-          <SidebarBody className="justify-between gap-10 overflow-x-hidden overflow-y-auto">
+          <SidebarBody className="justify-between gap-10 overflow-x-hidden overflow-y-auto h-screen">
             <div className="flex flex-1 flex-col ">
               {!isCollapsed ? <Logo /> : <LogoIcon />}
               
@@ -221,8 +221,12 @@ export function AppSidebar({
             </div>
           </SidebarBody>
         </Sidebar>
-        <div className="flex flex-1">
-          <div className="flex h-full w-full flex-1 flex-col gap-2 rounded-tl-2xl border border-sidebar-border bg-background p-2 md:p-6">
+        <div className={cn(
+          "flex flex-1 min-h-screen transition-all duration-300",
+          "ml-0 md:ml-[60px]",
+          !isCollapsed && "md:ml-[300px]"
+        )}>
+          <div className="flex min-h-full w-full flex-1 flex-col gap-2 rounded-tl-2xl border border-sidebar-border bg-background p-2 md:p-6 overflow-y-auto">
             {children}
           </div>
         </div>
