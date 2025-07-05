@@ -1,4 +1,4 @@
-# Polar SaaS Kit - Next.js Starter
+# Polar SaaS Kit with Vercel AI SDK
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/cgoinglove/nextjs-polar-starter-kit&env=BETTER_AUTH_SECRET&env=POLAR_ACCESS_TOKEN&envDescription=Learn+more+about+how+to+get+the+API+Keys+for+the+application&envLink=https://github.com/cgoinglove/nextjs-polar-starter-kit/blob/main/.env.example&demo-title=Polar+SaaS+Kit&demo-description=Production-ready+Next.js+starter+with+Polar.sh+payments,+Better+Auth,+and+premium+features&products=[{"type":"integration","protocol":"storage","productSlug":"neon","integrationSlug":"neon"}])
 
@@ -7,9 +7,9 @@
 **The complete production-ready Next.js starter kit for building modern SaaS applications with payments, authentication, and premium features.**
 
 🚀 **Built with the latest and greatest:**
-- ⚡ **Next.js 15** - React framework with App Router
+- ⚡ **Next.js 15.3.2** - React framework with App Router
 - 💳 **Polar.sh** - Modern payments and subscription management
-- 🔐 **Better Auth** - Authentication with OAuth and sessions
+- 🔐 **Better Auth 1.2.8** - Authentication with OAuth and sessions
 - 🗄️ **PostgreSQL + Drizzle ORM** - Type-safe database operations
 - 🎨 **20+ Theme Variants** - Beautiful theming system with dark mode
 - 🏢 **Production-Ready** - Sidebar navigation, user management, premium features
@@ -44,11 +44,11 @@ Perfect for SaaS applications, premium tools, and any web app that needs user ac
 - User profile management with avatar support
 - Settings page with theme selection
 - Landing page with pricing tiers
-- Internationalization support (7 languages)
+- Internationalization with `next-intl`, supporting 7 languages.
 
 ### 🛠️ **Developer Experience**
-- TypeScript everywhere with strict mode
-- Biome for fast linting and formatting
+- **TypeScript 5.8.3** with strict mode
+- **Biome** for fast linting and formatting
 - Hot reload development server
 - Docker support for easy deployment
 - Comprehensive error handling
@@ -244,41 +244,48 @@ pnpm dev
 ## 🏗️ Project Structure
 
 ```
-polar-saaskit/
-├── 📁 src/
-│   ├── 📁 app/                     # Next.js App Router
-│   │   ├── 📁 (auth)/             # Public authentication pages
-│   │   │   ├── sign-in/           # Sign in page
-│   │   │   └── sign-up/           # Sign up page  
-│   │   ├── 📁 (premium)/          # Protected premium features
-│   │   │   ├── app/               # Main app interface
-│   │   │   │   └── page.tsx       # Dashboard with sidebar
-│   │   │   └── layout.tsx         # Premium layout
-│   │   ├── 📁 api/                # API routes
-│   │   │   └── auth/              # Better Auth endpoints
-│   │   ├── pricing/               # Landing page pricing
-│   │   ├── page.tsx               # Landing page
-│   │   └── layout.tsx             # Root layout
-│   ├── 📁 components/             # React components
-│   │   ├── 📁 ui/                 # Reusable UI components
-│   │   ├── 📁 layouts/            # Layout components
-│   │   ├── 📁 landing/            # Landing page sections
-│   │   ├── dashboard.tsx          # Dashboard with stats
-│   │   ├── profile.tsx            # User profile
-│   │   └── settings.tsx           # Settings with themes
-│   ├── 📁 lib/                    # Core libraries
-│   │   ├── 📁 auth/               # Authentication config
-│   │   ├── 📁 db/                 # Database & migrations
-│   │   ├── utils.ts               # Utility functions
-│   │   └── const.ts               # App constants
-│   └── 📁 types/                  # TypeScript definitions
-├── 📁 messages/                   # Internationalization
-├── 📁 public/                     # Static assets
-├── 📁 docker/                     # Docker configuration
-└── 📁 scripts/                    # Build scripts
+aisdk-starter/
+  - src/
+    - app/
+      - (auth)/
+        - forgot-password/
+        - sign-in/
+        - sign-up/
+      - (premium)/
+        - app/
+      - api/
+        - auth/
+      - pricing/
+      - page.tsx
+      - layout.tsx
+    - components/
+      - landing/
+      - layouts/
+      - magicui/
+      - ui/
+      - dashboard.tsx
+      - profile.tsx
+      - settings.tsx
+    - lib/
+      - auth/
+      - db/
+      - cache/
+      - plunk/
+      - browser-stroage.ts
+      - const.ts
+      - keyboard-shortcuts.ts
+      - load-env.ts
+      - logger.ts
+      - utils.ts
+    - hooks/
+    - types/
+  - messages/
+  - public/
+  - docker/
+  - scripts/
 ```
 
-## 🎨 Theme System
+## �� Theme System
 
 This starter includes **20+ beautiful themes** with full dark mode support:
 
@@ -432,7 +439,7 @@ Contributions are welcome! Please read our contributing guidelines:
 
 ## 📧 Support
 
-- **Documentation**: Check the [cursor rules](.cursorrules) for detailed development guidelines
+- **Documentation**: Check the [cursor rules](.cursor/rules) for detailed development guidelines
 - **Issues**: [GitHub Issues](https://github.com/cgoinglove/nextjs-polar-starter-kit/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/cgoinglove/nextjs-polar-starter-kit/discussions)
 
