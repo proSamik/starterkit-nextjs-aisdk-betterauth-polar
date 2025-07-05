@@ -40,48 +40,6 @@ async function triggerPortalFallback() {
 }
 
 /**
- * Trigger orders fallback API call
- */
-async function triggerOrdersFallback(options: {
-  query: {
-    page: number;
-    limit: number;
-    productBillingType: "one_time" | "recurring";
-  };
-}) {
-  try {
-    const params = new URLSearchParams({
-      page: options.query.page.toString(),
-      limit: options.query.limit.toString(),
-      productBillingType: options.query.productBillingType,
-    });
-
-    console.log("Calling fallback orders API with params:", params.toString());
-    const response = await fetch(`/api/polar-fallback/orders?${params}`);
-
-    if (response.ok) {
-      const result = await response.json();
-      console.log("Fallback orders API response:", result);
-      if (result.success) {
-        // Format response to match Better Auth structure
-        return {
-          data: {
-            result: result.data,
-          },
-        };
-      }
-    } else {
-      console.error("Fallback orders API failed with status:", response.status);
-    }
-
-    throw new Error("Fallback orders also failed");
-  } catch (fallbackError) {
-    console.error("Orders fallback error:", fallbackError);
-    return { data: { result: { items: [] } } };
-  }
-}
-
-/**
  * Enhanced auth client with automatic fallback handling for Polar APIs
  */
 export const authClient = createAuthClient({
@@ -142,12 +100,42 @@ export const enhancedAuthClient = {
     ...authClient.customer,
 
     /**
-     * Enhanced portal method - fallback is handled automatically by onError
+     * Enhanced portal method - directly calls fallback API
      */
-    portal: authClient.customer.portal,
+    portal: async () => {
+      console.log("Enhanced portal: Using direct fallback API");
+
+      try {
+        const response = await fetch("/api/polar-fallback/portal", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          throw new Error(`Portal API failed with status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.success && result.url) {
+          console.log("Portal API success, redirecting to:", result.url);
+          window.location.href = result.url;
+          return;
+        } else {
+          throw new Error(result.error || "Portal API returned no URL");
+        }
+      } catch (error) {
+        console.error("Portal fallback API error:", error);
+        // Fallback to pricing page as last resort
+        console.log("Portal fallback failed, redirecting to pricing");
+        window.location.href = "/pricing";
+        throw error;
+      }
+    },
 
     /**
-     * Enhanced orders list method with automatic fallback
+     * Enhanced orders list method - directly calls fallback API
      */
     orders: {
       list: async (options: {
@@ -157,44 +145,57 @@ export const enhancedAuthClient = {
           productBillingType: "one_time" | "recurring";
         };
       }) => {
-        console.log("Enhanced orders.list called with options:", options);
-
-        // Check if fallback was already flagged by onError handler
-        if ((window as any).__polarOrdersFallbackNeeded) {
-          console.log("Orders fallback flag detected, using fallback directly");
-          (window as any).__polarOrdersFallbackNeeded = false; // Clear flag
-          return await triggerOrdersFallback(options);
-        }
+        console.log(
+          "Enhanced orders.list: Using direct fallback API with options:",
+          options,
+        );
 
         try {
-          const result = await authClient.customer.orders.list(options);
-          console.log("Better Auth orders.list succeeded:", result);
-          return result;
-        } catch (error: any) {
-          console.log("Better Auth orders.list failed with error:", error);
+          const params = new URLSearchParams({
+            page: options.query.page.toString(),
+            limit: options.query.limit.toString(),
+            productBillingType: options.query.productBillingType,
+          });
 
-          // Check for various error conditions that indicate we should use fallback
-          const shouldUseFallback =
-            error?.error?.code === "ORDERS_LIST_FAILED" ||
-            error?.error?.status === 500 ||
-            error?.message?.includes("customerId") ||
-            error?.message?.includes("customerExternalId") ||
-            error?.error?.message?.includes("customerId") ||
-            error?.error?.message?.includes("customerExternalId");
+          const response = await fetch(`/api/polar-fallback/orders?${params}`, {
+            method: "GET",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+          });
 
-          if (shouldUseFallback) {
-            console.log(
-              "Using Polar fallback for orders due to error:",
-              error?.error?.code || error?.error?.status || "validation error",
+          if (!response.ok) {
+            throw new Error(
+              `Orders API failed with status: ${response.status}`,
             );
-            return await triggerOrdersFallback(options);
-          } else {
-            console.log(
-              "Error doesn't match fallback conditions, re-throwing:",
-              error,
-            );
-            throw error;
           }
+
+          const result = await response.json();
+          console.log("Orders fallback API response:", result);
+
+          if (result.success) {
+            // Format response to match Better Auth structure
+            return {
+              data: {
+                result: result.data,
+              },
+            };
+          } else {
+            throw new Error(result.error || "Orders API returned error");
+          }
+        } catch (error) {
+          console.error("Orders fallback API error:", error);
+          // Return empty data structure instead of throwing
+          return {
+            data: {
+              result: {
+                items: [],
+                pagination: {
+                  total_count: 0,
+                  max_page: 0,
+                },
+              },
+            },
+          };
         }
       },
     },
