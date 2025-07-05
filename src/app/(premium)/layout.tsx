@@ -8,6 +8,7 @@ import { Settings } from "@/components/settings";
 import { Profile } from "@/components/profile";
 import { SubscriptionManagement } from "@/components/subscription-management";
 import { NotificationManager } from "@/components/notification-manager";
+import { Chat } from "@/components/chat";
 
 type UserTier = "free" | "monthly" | "yearly" | "lifetime";
 
@@ -116,7 +117,7 @@ function PremiumLayoutContent({ children }: { children: React.ReactNode }) {
   const { data: session, isPending: isAuthLoading } = authClient.useSession();
   const { userTier, isLoading: isTierLoading } = useUserTier();
   const [currentPage, setCurrentPage] = useState<
-    "dashboard" | "profile" | "settings" | "subscription"
+    "dashboard" | "chat" | "profile" | "settings" | "subscription"
   >("dashboard");
 
   // Redirect to sign-in if not authenticated
@@ -127,7 +128,7 @@ function PremiumLayoutContent({ children }: { children: React.ReactNode }) {
   }, [session, isAuthLoading]);
 
   const handleNavigation = (
-    page: "dashboard" | "profile" | "settings" | "subscription",
+    page: "dashboard" | "chat" | "profile" | "settings" | "subscription",
   ) => {
     setCurrentPage(page);
   };
@@ -136,6 +137,8 @@ function PremiumLayoutContent({ children }: { children: React.ReactNode }) {
     switch (currentPage) {
       case "dashboard":
         return children; // Render the original dashboard page
+      case "chat":
+        return <Chat />;
       case "profile":
         return <Profile />;
       case "settings":
