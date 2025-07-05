@@ -73,7 +73,9 @@ export default function SignUpPage() {
     try {
       const userExists = await existsByEmailAction(formData.email);
       if (userExists) {
-        toast.error("An account with this email already exists. Please sign in instead.");
+        toast.error(
+          "An account with this email already exists. Please sign in instead.",
+        );
         setIsLoading(false);
         return;
       }
@@ -141,7 +143,9 @@ export default function SignUpPage() {
             toast.error(ctx.error.message || "Failed to create account");
           },
           onSuccess() {
-            toast.success("Account created! Please check your email for verification.");
+            toast.success(
+              "Account created! Please check your email for verification.",
+            );
             setStep(4); // Move to success step
           },
         },
@@ -162,7 +166,7 @@ export default function SignUpPage() {
           callbackURL: "/app",
         },
         {
-          onError(ctx) {
+          onError(_ctx) {
             toast.error(`Failed to sign up with ${provider}`);
           },
         },
@@ -190,10 +194,9 @@ export default function SignUpPage() {
                 {step === 4 ? "Check Your Email" : t("title")}
               </CardTitle>
               <CardDescription className="text-center">
-                {step === 4 
+                {step === 4
                   ? "We've sent you a verification link"
-                  : steps[step - 1]
-                }
+                  : steps[step - 1]}
               </CardDescription>
             </div>
           </div>
@@ -290,7 +293,9 @@ export default function SignUpPage() {
                   type="password"
                   placeholder="Confirm your password"
                   value={formData.confirmPassword}
-                  onChange={(e) => setFormData({ confirmPassword: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ confirmPassword: e.target.value })
+                  }
                   onKeyDown={(e) => e.key === "Enter" && handlePasswordStep()}
                 />
               </div>
@@ -341,7 +346,8 @@ export default function SignUpPage() {
                 </p>
                 <p className="font-medium">{formData.email}</p>
                 <p className="text-sm text-muted-foreground">
-                  Click the link in the email to verify your account and complete the signup process.
+                  Click the link in the email to verify your account and
+                  complete the signup process.
                 </p>
               </div>
               <div className="pt-4">

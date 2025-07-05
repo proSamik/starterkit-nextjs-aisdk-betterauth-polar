@@ -37,15 +37,19 @@ export default function SignInPage() {
   useEffect(() => {
     const verified = searchParams.get("verified");
     const message = searchParams.get("message");
-    
+
     if (verified === "true") {
       toast.success("Email verified successfully! You can now sign in.");
     }
     if (message === "check-email") {
-      toast.info("Please check your email and click the verification link to activate your account.");
+      toast.info(
+        "Please check your email and click the verification link to activate your account.",
+      );
     }
     if (message === "password-reset") {
-      toast.success("Password reset successfully! You can now sign in with your new password.");
+      toast.success(
+        "Password reset successfully! You can now sign in with your new password.",
+      );
     }
   }, [searchParams]);
 
@@ -69,7 +73,9 @@ export default function SignInPage() {
         {
           onError(ctx) {
             if (ctx.error.status === 403) {
-              toast.error("Please verify your email address before signing in.");
+              toast.error(
+                "Please verify your email address before signing in.",
+              );
             } else {
               toast.error(ctx.error.message || "Sign in failed");
             }
@@ -95,7 +101,7 @@ export default function SignInPage() {
           callbackURL: "/app",
         },
         {
-          onError(ctx) {
+          onError(_ctx) {
             toast.error(`Failed to sign in with ${provider}`);
           },
         },
@@ -121,7 +127,9 @@ export default function SignInPage() {
         },
         {
           onError(ctx) {
-            toast.error(ctx.error.message || "Failed to send verification email");
+            toast.error(
+              ctx.error.message || "Failed to send verification email",
+            );
           },
           onSuccess() {
             toast.success("Verification email sent! Please check your inbox.");
