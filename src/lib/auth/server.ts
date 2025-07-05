@@ -23,7 +23,6 @@ import {
 } from "@/lib/plunk/events";
 import { validateEmailSecurity } from "@/lib/auth/rate-limiter";
 
-
 // Initialize Polar client
 const polarClient = new Polar({
   accessToken: process.env.POLAR_ACCESS_TOKEN || "",
@@ -49,7 +48,8 @@ export const auth = betterAuth({
               slug: "yearly",
             },
             {
-              productId: process.env.NEXT_PUBLIC_POLAR_LIFETIME_PRODUCT_ID || "",
+              productId:
+                process.env.NEXT_PUBLIC_POLAR_LIFETIME_PRODUCT_ID || "",
               slug: "lifetime",
             },
           ],
@@ -60,50 +60,50 @@ export const auth = betterAuth({
       ],
     }),
     emailHarmony(),
-    ],
-    emailVerification: {
-      /**
-       * Send verification email with link for email verification during signup
-       * @param user - User object containing email and other details
-       * @param url - The verification URL containing the token
-       * @param token - The verification token used to complete verification
-       */
-      async sendVerificationEmail({ user, url, token }, request) {
-        try {
-          // Validate email address before sending
-          if (!user.email || typeof user.email !== 'string') {
-            console.error('Invalid email address provided for verification');
-            return;
-          }
-          
-          // Enhanced security validation
-          const emailValidation = validateEmailSecurity(user.email);
-          if (!emailValidation.valid) {
-            console.error('Email security validation failed:', emailValidation.error);
-            return;
-          }
-          
-          // Send verification email using the modern link-based verification
-          const result = await sendEmailVerificationLink(user.email, url);
-          
-          // Log result for monitoring
-          if (result && !result.success) {
-            console.error(
-              `Failed to send email verification to ${user.email}:`,
-              result.error,
-            );
-          }
-        } catch (error) {
-          console.error(
-            `Critical error in sendVerificationEmail:`,
-            error,
-          );
-          // Don't throw error to prevent breaking the auth flow
+  ],
+  emailVerification: {
+    /**
+     * Send verification email with link for email verification during signup
+     * @param user - User object containing email and other details
+     * @param url - The verification URL containing the token
+     * @param token - The verification token used to complete verification
+     */
+    async sendVerificationEmail({ user, url }, _request) {
+      try {
+        // Validate email address before sending
+        if (!user.email || typeof user.email !== "string") {
+          console.error("Invalid email address provided for verification");
+          return;
         }
-      },
-      sendOnSignUp: true, // Send verification email on signup
-      autoSignInAfterVerification: false, // Don't auto sign in after verification
+
+        // Enhanced security validation
+        const emailValidation = validateEmailSecurity(user.email);
+        if (!emailValidation.valid) {
+          console.error(
+            "Email security validation failed:",
+            emailValidation.error,
+          );
+          return;
+        }
+
+        // Send verification email using the modern link-based verification
+        const result = await sendEmailVerificationLink(user.email, url);
+
+        // Log result for monitoring
+        if (result && !result.success) {
+          console.error(
+            `Failed to send email verification to ${user.email}:`,
+            result.error,
+          );
+        }
+      } catch (error) {
+        console.error(`Critical error in sendVerificationEmail:`, error);
+        // Don't throw error to prevent breaking the auth flow
+      }
     },
+    sendOnSignUp: true, // Send verification email on signup
+    autoSignInAfterVerification: false, // Don't auto sign in after verification
+  },
   database: drizzleAdapter(pgDb, {
     provider: "pg",
     schema: {
@@ -125,24 +125,27 @@ export const auth = betterAuth({
      * @param url - The reset URL containing the token
      * @param token - The reset token used to complete password reset
      */
-    async sendResetPassword({ user, url, token }, request) {
+    async sendResetPassword({ user, url }, _request) {
       try {
         // Validate email address before sending
-        if (!user.email || typeof user.email !== 'string') {
-          console.error('Invalid email address provided for password reset');
+        if (!user.email || typeof user.email !== "string") {
+          console.error("Invalid email address provided for password reset");
           return;
         }
-        
+
         // Enhanced security validation
         const emailValidation = validateEmailSecurity(user.email);
         if (!emailValidation.valid) {
-          console.error('Email security validation failed:', emailValidation.error);
+          console.error(
+            "Email security validation failed:",
+            emailValidation.error,
+          );
           return;
         }
-        
+
         // Send password reset link using the modern link-based function
         const result = await sendPasswordResetLink(user.email, url);
-        
+
         // Log result for monitoring
         if (result && !result.success) {
           console.error(
@@ -151,10 +154,7 @@ export const auth = betterAuth({
           );
         }
       } catch (error) {
-        console.error(
-          `Critical error in sendResetPassword:`,
-          error,
-        );
+        console.error(`Critical error in sendResetPassword:`, error);
         // Don't throw error to prevent breaking the auth flow
       }
     },
@@ -219,15 +219,25 @@ export const auth = betterAuth({
         after: async (account) => {
           try {
             // Track social signup for new accounts created via OAuth providers
-            if (account.providerId === "github" || account.providerId === "google") {
+            if (
+              account.providerId === "github" ||
+              account.providerId === "google"
+            ) {
               // Use raw SQL to check if this is a new social signup
-              const userResult = await pgDb.select().from(UserSchema).where(eq(UserSchema.id, account.userId)).limit(1);
+              const userResult = await pgDb
+                .select()
+                .from(UserSchema)
+                .where(eq(UserSchema.id, account.userId))
+                .limit(1);
               const user = userResult[0];
-              
+
               if (user) {
                 // Check if this is the user's first account (indicating a new signup)
-                const accountCount = await pgDb.select({ count: sql`count(*)` }).from(AccountSchema).where(eq(AccountSchema.userId, account.userId));
-                
+                const accountCount = await pgDb
+                  .select({ count: sql`count(*)` })
+                  .from(AccountSchema)
+                  .where(eq(AccountSchema.userId, account.userId));
+
                 // If this is the only account for this user, it's a new social signup
                 if (accountCount[0]?.count === 1) {
                   await trackUserSignup(user.email, user.name);
