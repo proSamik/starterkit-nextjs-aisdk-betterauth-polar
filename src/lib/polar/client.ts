@@ -160,28 +160,6 @@ export class PolarFallbackClient {
     console.log("User data provided:", userData);
 
     try {
-      // Method 1: Try to get customer by external ID
-      console.log("Method 1: Attempting to get customer by external ID");
-      try {
-        const existingCustomer = await (this.polarClient.customers as any).get({
-          externalId: externalCustomerId,
-        });
-        console.log(
-          "Found existing customer via external ID:",
-          existingCustomer,
-        );
-        return existingCustomer;
-      } catch (error: any) {
-        console.log(
-          "Method 1 failed - customer not found by external ID:",
-          error.message,
-        );
-      }
-
-      // Method 2: Try to list customers and find by external ID
-      console.log(
-        "Method 2: Attempting to find customer by listing and filtering",
-      );
       try {
         const customersIterator = await (
           this.polarClient.customers as any
@@ -193,70 +171,40 @@ export class PolarFallbackClient {
           console.log("Checking page of customers:", page.items?.length || 0);
           if (page.items) {
             for (const customer of page.items) {
-              console.log("Checking customer:", {
-                id: customer.id,
-                externalId: customer.externalId,
-                email: customer.email,
-                name: customer.name,
-              });
-
-              // Check if this customer matches our user
+              // Match by external ID or email
               if (
                 customer.externalId === externalCustomerId ||
-                (userData?.email && customer.email === userData.email)
+                (userData?.email &&
+                  customer.email.toLowerCase() === userData.email.toLowerCase())
               ) {
-                console.log("Found matching customer:", customer);
+                console.log("Found matching customer by external ID or email:");
+                console.log({
+                  id: customer.id,
+                  externalId: customer.externalId,
+                  email: customer.email,
+                  name: customer.name,
+                });
                 return customer;
               }
             }
           }
         }
         console.log("No matching customer found in list");
-      } catch (listError: any) {
+      } catch (error: any) {
         console.log(
           "Method 2 failed - could not list customers:",
-          listError.message,
+          error.message,
         );
       }
 
-      // Method 3: Try to create new customer if none found
-      console.log(
-        "Method 3: Customer not found, attempting to create new customer",
-      );
-
-      try {
-        const customerData = {
-          externalId: externalCustomerId,
-          email: userData?.email || `user-${externalCustomerId}@example.com`,
-          name: userData?.name || `User ${externalCustomerId.substring(0, 8)}`,
-        };
-
-        console.log("Creating customer with data:", customerData);
-
-        const newCustomer = await (this.polarClient.customers as any).create(
-          customerData,
-        );
-        console.log("Successfully created new customer:", newCustomer);
-        return newCustomer;
-      } catch (createError: any) {
-        console.error(
-          "Method 3 failed - could not create customer:",
-          createError,
-        );
-        console.error(
-          "Create error details:",
-          JSON.stringify(createError, null, 2),
-        );
-
-        // Return a placeholder customer object
-        console.log("Returning placeholder customer object");
-        return {
-          id: "",
-          externalId: externalCustomerId,
-          email: userData?.email || "",
-          name: userData?.name || "",
-        };
-      }
+      // If all methods fail, return a placeholder object to avoid breaking the flow
+      console.log("Returning placeholder customer object");
+      return {
+        id: "",
+        externalId: externalCustomerId,
+        email: userData?.email || "",
+        name: userData?.name || "",
+      };
     } catch (error: any) {
       console.error("Overall customer ensure process failed:", error);
       console.error("Error details:", JSON.stringify(error, null, 2));
