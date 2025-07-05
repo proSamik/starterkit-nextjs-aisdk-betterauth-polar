@@ -88,11 +88,15 @@ export const DesktopSidebar = ({
     <>
       <motion.div
         className={cn(
-          "h-full px-4 py-4 hidden  md:flex md:flex-col bg-sidebar w-[300px] shrink-0",
+          "fixed left-0 top-0 h-screen px-4 py-4 hidden md:flex md:flex-col bg-sidebar w-[300px] shrink-0 z-10",
           className
         )}
         animate={{
           width: animate ? (open ? "300px" : "60px") : "300px",
+        }}
+        transition={{
+          duration: 0.3,
+          ease: "easeInOut",
         }}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
@@ -135,7 +139,7 @@ export const MobileSidebar = ({
                 ease: "easeInOut",
               }}
               className={cn(
-                "fixed h-full w-full inset-0 bg-background p-10 z-[100] flex flex-col justify-between",
+                "fixed min-h-full w-full inset-0 bg-background p-10 z-[100] flex flex-col justify-between",
                 className
               )}
             >
