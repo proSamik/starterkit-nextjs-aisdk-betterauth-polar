@@ -57,9 +57,9 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full`}
       >
         <ThemeProvider
           attribute="data-theme"
@@ -68,7 +68,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <NextIntlClientProvider messages={messages}>
-            <div id="root">
+            <div id="root" className="min-h-full">
               <ConditionalNavigation />
               {children}
               <Toaster richColors />
