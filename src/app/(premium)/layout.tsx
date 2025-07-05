@@ -8,7 +8,7 @@ import { Settings } from "@/components/settings";
 import { Profile } from "@/components/profile";
 import { SubscriptionManagement } from "@/components/subscription-management";
 import { NotificationManager } from "@/components/notification-manager";
-import { Chat } from "@/components/chat";
+import Chat from "@/components/chat";
 
 type UserTier = "free" | "monthly" | "yearly" | "lifetime";
 
