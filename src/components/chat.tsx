@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import {
@@ -11,9 +10,12 @@ import { useChat } from "@ai-sdk/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Markdown } from "@/components/markdown";
+import { useRef, useState } from "react";
 
 export default function Chat() {
   const { messages, input, handleInputChange, handleSubmit } = useChat();
+  const [files, setFiles] = useState<FileList | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div className="flex flex-row justify-center pb-20 h-dvh bg-background text-foreground">
@@ -41,6 +43,18 @@ export default function Chat() {
                       }
                     })}
                   </div>
+                  {(message as any).experimental_attachments
+                    ?.filter((attachment: any) =>
+                      attachment.contentType?.startsWith("image/"),
+                    )
+                    .map((attachment: any, index: number) => (
+                      <img
+                        key={`${message.id}-${index}`}
+                        src={attachment.url}
+                        alt={attachment.name}
+                        className="rounded-md"
+                      />
+                    ))}
                 </div>
               </motion.div>
             ))}
@@ -77,9 +91,31 @@ export default function Chat() {
 
         <form
           className="flex flex-col gap-2 relative items-center"
-          onSubmit={handleSubmit}
+          onSubmit={(e) => {
+            handleSubmit(e, {
+              experimental_attachments: files,
+            } as any);
+            setFiles(null);
+            if (fileInputRef.current) {
+              fileInputRef.current.value = "";
+            }
+          }}
         >
           <div className="flex items-center w-full md:max-w-[500px] max-w-[calc(100dvw-32px)] bg-muted rounded-full px-4 py-2">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="mr-2"
+            >
+              <AttachmentIcon />
+            </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              multiple
+              onChange={(e) => setFiles(e.target.files)}
+              className="hidden"
+            />
             <input
               className="bg-transparent flex-grow outline-none text-foreground placeholder-muted-foreground"
               placeholder="Send a message..."
@@ -87,6 +123,32 @@ export default function Chat() {
               onChange={handleInputChange}
             />
           </div>
+          {files && files.length > 0 && (
+            <div className="flex items-center w-full md:max-w-[500px] max-w-[calc(100dvw-32px)] bg-muted rounded-lg px-4 py-2 text-sm text-muted-foreground">
+              <div className="flex flex-wrap gap-2">
+                {Array.from(files).map((file) => (
+                  <div
+                    key={file.name}
+                    className="bg-background rounded-full px-2 py-1 text-xs"
+                  >
+                    {file.name}
+                  </div>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setFiles(null);
+                  if (fileInputRef.current) {
+                    fileInputRef.current.value = "";
+                  }
+                }}
+                className="ml-auto text-xs text-red-500"
+              >
+                Clear
+              </button>
+            </div>
+          )}
         </form>
       </div>
     </div>
