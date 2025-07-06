@@ -26,7 +26,7 @@ export interface UIState {
   };
   notifications: Array<{
     id: string;
-    type: 'success' | 'error' | 'warning' | 'info';
+    type: "success" | "error" | "warning" | "info";
     message: string;
     timestamp: number;
   }>;
@@ -43,26 +43,28 @@ export interface AppState {
     name?: string;
     avatar?: string;
     subscription?: {
-      status: 'active' | 'inactive' | 'trial' | 'canceled';
-      plan: 'monthly' | 'yearly' | 'lifetime';
+      status: "active" | "inactive" | "trial" | "canceled";
+      plan: "monthly" | "yearly" | "lifetime";
       expiresAt?: string;
     };
   };
-  
+
   // User preferences with defaults
   preferences: UserPreferences;
-  
+
   // UI state
   ui: UIState;
-  
+
   // Actions
-  setUser: (user: Partial<AppState['user']>) => void;
+  setUser: (user: Partial<AppState["user"]>) => void;
   updatePreferences: (preferences: Partial<UserPreferences>) => void;
   toggleSidebar: () => void;
   setMobile: (isMobile: boolean) => void;
   setLoading: (isLoading: boolean) => void;
-  toggleModal: (modal: keyof UIState['modals']) => void;
-  addNotification: (notification: Omit<UIState['notifications'][0], 'id' | 'timestamp'>) => void;
+  toggleModal: (modal: keyof UIState["modals"]) => void;
+  addNotification: (
+    notification: Omit<UIState["notifications"][0], "id" | "timestamp">,
+  ) => void;
   removeNotification: (id: string) => void;
   clearNotifications: () => void;
   resetState: () => void;
@@ -72,8 +74,8 @@ export interface AppState {
  * Default preferences for new users
  */
 const defaultPreferences: UserPreferences = {
-  theme: 'default',
-  language: 'en',
+  theme: "default",
+  language: "en",
   sidebarCollapsed: false,
   emailNotifications: true,
   marketingEmails: false,
@@ -104,101 +106,143 @@ export const useAppStore = create<AppState>()(
         user: {},
         preferences: defaultPreferences,
         ui: defaultUIState,
-        
+
         // Actions
         setUser: (userData) => {
-          set((state) => ({
-            user: { ...state.user, ...userData }
-          }), false, 'setUser');
+          set(
+            (state) => ({
+              user: { ...state.user, ...userData },
+            }),
+            false,
+            "setUser",
+          );
         },
-        
+
         updatePreferences: (newPreferences) => {
-          set((state) => ({
-            preferences: { ...state.preferences, ...newPreferences }
-          }), false, 'updatePreferences');
+          set(
+            (state) => ({
+              preferences: { ...state.preferences, ...newPreferences },
+            }),
+            false,
+            "updatePreferences",
+          );
         },
-        
+
         toggleSidebar: () => {
-          set((state) => ({
-            preferences: {
-              ...state.preferences,
-              sidebarCollapsed: !state.preferences.sidebarCollapsed
-            }
-          }), false, 'toggleSidebar');
+          set(
+            (state) => ({
+              preferences: {
+                ...state.preferences,
+                sidebarCollapsed: !state.preferences.sidebarCollapsed,
+              },
+            }),
+            false,
+            "toggleSidebar",
+          );
         },
-        
+
         setMobile: (isMobile) => {
-          set((state) => ({
-            ui: { ...state.ui, isMobile }
-          }), false, 'setMobile');
+          set(
+            (state) => ({
+              ui: { ...state.ui, isMobile },
+            }),
+            false,
+            "setMobile",
+          );
         },
-        
+
         setLoading: (isLoading) => {
-          set((state) => ({
-            ui: { ...state.ui, isLoading }
-          }), false, 'setLoading');
+          set(
+            (state) => ({
+              ui: { ...state.ui, isLoading },
+            }),
+            false,
+            "setLoading",
+          );
         },
-        
+
         toggleModal: (modal) => {
-          set((state) => ({
-            ui: {
-              ...state.ui,
-              modals: {
-                ...state.ui.modals,
-                [modal]: !state.ui.modals[modal]
-              }
-            }
-          }), false, `toggleModal:${modal}`);
+          set(
+            (state) => ({
+              ui: {
+                ...state.ui,
+                modals: {
+                  ...state.ui.modals,
+                  [modal]: !state.ui.modals[modal],
+                },
+              },
+            }),
+            false,
+            `toggleModal:${modal}`,
+          );
         },
-        
+
         addNotification: (notification) => {
           const id = Math.random().toString(36).substring(2);
           const timestamp = Date.now();
-          
-          set((state) => ({
-            ui: {
-              ...state.ui,
-              notifications: [
-                ...state.ui.notifications,
-                { ...notification, id, timestamp }
-              ]
-            }
-          }), false, 'addNotification');
-          
+
+          set(
+            (state) => ({
+              ui: {
+                ...state.ui,
+                notifications: [
+                  ...state.ui.notifications,
+                  { ...notification, id, timestamp },
+                ],
+              },
+            }),
+            false,
+            "addNotification",
+          );
+
           // Auto-remove notification after 5 seconds
           setTimeout(() => {
             get().removeNotification(id);
           }, 5000);
         },
-        
+
         removeNotification: (id) => {
-          set((state) => ({
-            ui: {
-              ...state.ui,
-              notifications: state.ui.notifications.filter(n => n.id !== id)
-            }
-          }), false, 'removeNotification');
+          set(
+            (state) => ({
+              ui: {
+                ...state.ui,
+                notifications: state.ui.notifications.filter(
+                  (n) => n.id !== id,
+                ),
+              },
+            }),
+            false,
+            "removeNotification",
+          );
         },
-        
+
         clearNotifications: () => {
-          set((state) => ({
-            ui: {
-              ...state.ui,
-              notifications: []
-            }
-          }), false, 'clearNotifications');
+          set(
+            (state) => ({
+              ui: {
+                ...state.ui,
+                notifications: [],
+              },
+            }),
+            false,
+            "clearNotifications",
+          );
         },
-        
+
         resetState: () => {
-          set({
-            user: {},
-            preferences: defaultPreferences,
-            ui: defaultUIState,
-          }, false, 'resetState');
+          set(
+            {
+              user: {},
+              preferences: defaultPreferences,
+              ui: defaultUIState,
+            },
+            false,
+            "resetState",
+          );
         },
       }),
       {
-        name: 'polar-saas-kit-store',
+        name: "polar-saas-kit-store",
         // Only persist user preferences, not UI state
         partialize: (state) => ({
           user: state.user,
@@ -206,12 +250,12 @@ export const useAppStore = create<AppState>()(
         }),
         // Version for migration support
         version: 1,
-      }
+      },
     ),
     {
-      name: 'polar-saas-kit',
-    }
-  )
+      name: "polar-saas-kit",
+    },
+  ),
 );
 
 /**
@@ -237,9 +281,11 @@ export const useUIState = () => useAppStore((state) => state.ui);
  * Hook to get sidebar state
  */
 export const useSidebar = () => {
-  const isCollapsed = useAppStore((state) => state.preferences.sidebarCollapsed);
+  const isCollapsed = useAppStore(
+    (state) => state.preferences.sidebarCollapsed,
+  );
   const toggle = useAppStore((state) => state.toggleSidebar);
-  
+
   return { isCollapsed, toggle };
 };
 
@@ -249,9 +295,9 @@ export const useSidebar = () => {
 export const useThemePreference = () => {
   const theme = useAppStore((state) => state.preferences.theme);
   const updatePreferences = useAppStore((state) => state.updatePreferences);
-  
+
   const setTheme = (theme: string) => updatePreferences({ theme });
-  
+
   return { theme, setTheme };
 };
 
@@ -263,7 +309,7 @@ export const useNotifications = () => {
   const add = useAppStore((state) => state.addNotification);
   const remove = useAppStore((state) => state.removeNotification);
   const clear = useAppStore((state) => state.clearNotifications);
-  
+
   return { notifications, add, remove, clear };
 };
 
@@ -273,7 +319,7 @@ export const useNotifications = () => {
 export const useModals = () => {
   const modals = useAppStore((state) => state.ui.modals);
   const toggle = useAppStore((state) => state.toggleModal);
-  
+
   return { modals, toggle };
 };
 
@@ -283,7 +329,7 @@ export const useModals = () => {
 export const useLoading = () => {
   const isLoading = useAppStore((state) => state.ui.isLoading);
   const setLoading = useAppStore((state) => state.setLoading);
-  
+
   return { isLoading, setLoading };
 };
 
@@ -295,7 +341,6 @@ export const useStoreActions = () => {
   const updatePreferences = useAppStore((state) => state.updatePreferences);
   const setMobile = useAppStore((state) => state.setMobile);
   const resetState = useAppStore((state) => state.resetState);
-  
+
   return { setUser, updatePreferences, setMobile, resetState };
 };
-
