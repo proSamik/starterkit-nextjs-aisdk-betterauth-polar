@@ -43,6 +43,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .local-cache
+pnpm-lock.yaml
 
 # memory-bank
 /memory-bank
