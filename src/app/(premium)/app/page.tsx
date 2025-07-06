@@ -1,7 +1,7 @@
 "use client";
 
 import { authClient, enhancedAuthClient } from "auth/client";
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -14,6 +14,11 @@ import { Crown, Zap, Calendar, CreditCard } from "lucide-react";
 import { Skeleton } from "ui/skeleton";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Chat from "@/components/chat";
+import { Profile } from "@/components/profile";
+import { Settings } from "@/components/settings";
+import { ModelSelector } from "@/components/ui/model-selector";
+import { ModelId } from "@/lib/ai-models";
 
 // Polar API response format
 type CustomerState = {
@@ -94,7 +99,11 @@ function useCustomerState() {
   const [userTier, setUserTier] = useState<UserTier>("free");
   const { data: session } = authClient.useSession();
 
-  const fetchCustomerState = async () => {
+  const fetchCustomerState = useCallback(async () => {
+    if (!session?.user) {
+      setIsLoading(false);
+      return;
+    }
     try {
       setIsLoading(true);
 
@@ -187,14 +196,12 @@ function useCustomerState() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [session?.user?.id]);
 
   // Fetch customer state on mount and when session changes
   useEffect(() => {
-    if (session?.user) {
-      fetchCustomerState();
-    }
-  }, [session]);
+    fetchCustomerState();
+  }, [fetchCustomerState]);
 
   return {
     customerState,
@@ -206,9 +213,9 @@ function useCustomerState() {
 }
 
 /**
- * Dashboard content component that handles the data fetching
+ * Dashboard component that handles its own data fetching
  */
-function DashboardContent() {
+function Dashboard() {
   const { customerState, lifetimeOrders, isLoading, userTier, refetch } =
     useCustomerState();
   const { data: session } = authClient.useSession();
@@ -218,18 +225,10 @@ function DashboardContent() {
   // Handle successful checkout
   useEffect(() => {
     const checkoutSuccess = searchParams.get("checkout_success");
-    const checkoutId = searchParams.get("checkout_id");
-
-    if (checkoutSuccess === "true" && checkoutId && session?.user) {
-      // Show success message
+    if (checkoutSuccess === "true" && session?.user) {
       toast.success("🎉 Payment successful! Welcome to premium!");
+      setTimeout(() => refetch(), 2000);
 
-      // Refetch customer state after a short delay to ensure Polar has processed the payment
-      setTimeout(() => {
-        refetch();
-      }, 2000);
-
-      // Clean up URL parameters
       const url = new URL(window.location.href);
       url.searchParams.delete("checkout_success");
       url.searchParams.delete("checkout_id");
@@ -238,28 +237,23 @@ function DashboardContent() {
     }
   }, [searchParams, session, router, refetch]);
 
-  // ... existing code ...
+  if (isLoading) {
+    return <DashboardSkeleton />;
+  }
+
+  /**
+   * Returns a personalized welcome message based on user tier
+   */
+  const getWelcomeMessage = () => {
+    if (!session?.user?.name) return "Welcome";
+    return `Welcome back, ${session.user.name.split(" ")[0]}!`;
+  };
 
   /**
    * Determines the user's subscription tier based on customer state and lifetime orders
    */
   const getUserTier = (): UserTier => {
     return userTier;
-  };
-
-  /**
-   * Returns a personalized welcome message based on user tier
-   */
-  const getWelcomeMessage = () => {
-    const tier = getUserTier();
-    const tierMessages = {
-      free: "Welcome to your dashboard! Upgrade to unlock premium features.",
-      monthly: "Welcome back, Premium Member! Enjoy your enhanced features.",
-      yearly: "Welcome back, Yearly Subscriber! You're getting great value.",
-      lifetime:
-        "Welcome back, Lifetime Member! You have access to everything, forever.",
-    };
-    return tierMessages[tier];
   };
 
   /**
@@ -377,10 +371,6 @@ function DashboardContent() {
 
     return tierContent[tier];
   };
-
-  if (isLoading) {
-    return <DashboardSkeleton />;
-  }
 
   const tierContent = getTierSpecificContent();
   const tier = getUserTier();
@@ -614,13 +604,34 @@ function DashboardContent() {
   );
 }
 
-/**
- * Main dashboard page component with suspense wrapper
- */
-export default function DashboardPage() {
+function AppPageContent() {
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab") || "dashboard";
+  const [model, setModel] = useState<ModelId>("gpt-4o");
+
+  return (
+    <div className="flex flex-col h-full">
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-bold capitalize">{tab}</h1>
+        {tab === "chat" && (
+          <ModelSelector value={model} onValueChange={setModel} />
+        )}
+      </div>
+
+      <div className="flex-grow h-full">
+        {tab === "dashboard" && <Dashboard />}
+        {tab === "chat" && <Chat model={model} />}
+        {tab === "profile" && <Profile />}
+        {tab === "settings" && <Settings />}
+      </div>
+    </div>
+  );
+}
+
+export default function AppPage() {
   return (
     <Suspense fallback={<DashboardSkeleton />}>
-      <DashboardContent />
+      <AppPageContent />
     </Suspense>
   );
 }
