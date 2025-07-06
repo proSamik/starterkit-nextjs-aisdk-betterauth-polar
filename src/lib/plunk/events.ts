@@ -3,7 +3,7 @@
  *
  * This module provides transactional email functionality for user authentication flows:
  * - Email verification emails with verification links
- * - Password reset emails with reset links  
+ * - Password reset emails with reset links
  * - User signup event tracking
  *
  * EMAIL TEMPLATES:
@@ -171,10 +171,13 @@ export async function sendEmailVerificationLink(
     // Validate email security
     const emailValidation = validateEmailSecurity(email);
     if (!emailValidation.valid) {
-      console.error(`Security validation failed for email ${email}:`, emailValidation.error);
+      console.error(
+        `Security validation failed for email ${email}:`,
+        emailValidation.error,
+      );
       return {
         success: false,
-        error: emailValidation.error || 'Invalid email address',
+        error: emailValidation.error || "Invalid email address",
       };
     }
 
@@ -229,10 +232,13 @@ export async function sendPasswordResetLink(
     // Validate email security
     const emailValidation = validateEmailSecurity(email);
     if (!emailValidation.valid) {
-      console.error(`Security validation failed for email ${email}:`, emailValidation.error);
+      console.error(
+        `Security validation failed for email ${email}:`,
+        emailValidation.error,
+      );
       return {
         success: false,
-        error: emailValidation.error || 'Invalid email address',
+        error: emailValidation.error || "Invalid email address",
       };
     }
 
@@ -301,20 +307,14 @@ export async function trackUserSignup(
     if (result.success) {
       console.log(`User signup tracked successfully for ${email}`);
     } else {
-      console.error(
-        `Failed to track user signup for ${email}:`,
-        result.error,
-      );
+      console.error(`Failed to track user signup for ${email}:`, result.error);
     }
 
     return result;
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
-    console.error(
-      `Failed to track user signup for ${email}:`,
-      errorMessage,
-    );
+    console.error(`Failed to track user signup for ${email}:`, errorMessage);
     return {
       success: false,
       error: errorMessage,

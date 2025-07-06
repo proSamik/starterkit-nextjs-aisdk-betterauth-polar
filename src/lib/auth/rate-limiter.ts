@@ -20,12 +20,15 @@ export interface RateLimitResult {
   error?: string;
 }
 
-export function validateEmailSecurity(email: string): { valid: boolean; error?: string } {
+export function validateEmailSecurity(email: string): {
+  valid: boolean;
+  error?: string;
+} {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   if (!emailRegex.test(email)) {
-    return { valid: false, error: 'Invalid email format' };
+    return { valid: false, error: "Invalid email format" };
   }
-  
+
   // Check for suspicious patterns
   const suspiciousPatterns = [
     /[<>]/, // HTML/XML tags
@@ -33,16 +36,16 @@ export function validateEmailSecurity(email: string): { valid: boolean; error?: 
     /['\"`]/, // Quote injection
     /\r|\n/, // Line breaks
   ];
-  
+
   for (const pattern of suspiciousPatterns) {
     if (pattern.test(email)) {
-      return { valid: false, error: 'Email contains suspicious characters' };
+      return { valid: false, error: "Email contains suspicious characters" };
     }
   }
-  
+
   if (email.length > 254) {
-    return { valid: false, error: 'Email address too long' };
+    return { valid: false, error: "Email address too long" };
   }
-  
+
   return { valid: true };
-} 
+}
