@@ -1,6 +1,6 @@
 import { getSession } from "@/lib/auth/server";
 import { createOpenAI } from "@ai-sdk/openai";
-import { convertToModelMessages, streamText, UIMessage } from "ai";
+import { convertToCoreMessages, streamText, UIMessage } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 
 if (!process.env.OPENAI_API_KEY) {
@@ -28,8 +28,8 @@ export async function POST(req: NextRequest) {
     model: openai("gpt-4o"),
     system:
       "do not respond on markdown or lists, keep your responses brief, you can ask the user to upload images or documents if it could help you understand the problem better",
-    messages: convertToModelMessages(messages),
+    messages: convertToCoreMessages(messages),
   });
 
-  return result.toUIMessageStreamResponse();
+  return result.toDataStreamResponse();
 }
