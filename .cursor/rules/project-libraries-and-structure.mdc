@@ -1,8 +1,3 @@
----
-description: 
-globs: 
-alwaysApply: true
----
 # Polar SaaS Kit - Project Documentation
 # Always update this whenever something is updated or added new
 
@@ -17,6 +12,13 @@ alwaysApply: true
 - **React 19.1.0** & **React DOM 19.1.0** - Latest React with concurrent features
 - **TypeScript 5.8.3** - Type-safe development with strict configuration
 - **Node.js >=18** - Runtime environment requirement
+
+### AI & Chat Integration
+- **Vercel AI SDK** - AI chat integration with streaming support
+- **TipTap Editor** - Rich text editor for chat input
+- **Framer Motion** - Smooth animations for chat UI
+- **Markdown Support** - Rich message rendering
+- **File Upload** - Image and text file support
 
 ### Authentication & Authorization
 - **better-auth 1.2.8** - Modern authentication library with session management
@@ -96,6 +98,10 @@ app/
 ### `/src/components` - React Components
 ```
 components/
+├── chat/                  # Chat components
+│   ├── chat.tsx          # Main chat interface
+│   ├── chat-list.tsx     # Message list component
+│   └── tool-display.tsx  # AI tool display
 ├── landing/               # Landing page sections
 │   ├── hero-section.tsx          # Main hero with CTA
 │   ├── why-not-that-section.tsx  # Feature comparisons
@@ -161,6 +167,9 @@ components/
 ### `/src/lib` - Core Libraries & Utilities
 ```
 lib/
+├── ai-models/            # AI model configurations
+│   ├── index.ts         # Model definitions
+│   └── tools/          # Custom AI tools
 ├── auth/                  # Authentication configuration
 │   ├── server.ts         # Better Auth server setup with Polar plugin
 │   └── client.ts         # Better Auth client setup with error filtering
@@ -318,6 +327,11 @@ pnpm docker:app          # Application only
 - **POLAR_ACCESS_TOKEN** - Polar.sh API token
 - **POLAR_*_PRODUCT_ID** - Product IDs for different subscription tiers
 
+### AI Model Configuration
+- **OPENAI_API_KEY** - OpenAI API key for GPT-4
+- **ANTHROPIC_API_KEY** - Anthropic API key for Claude
+- **GOOGLE_API_KEY** - Google API key for Gemini
+
 ### Optional Variables
 - **BETTER_AUTH_URL** - Base URL for auth callbacks
 - **DISABLE_SIGN_UP** - Disable new user registration
@@ -343,6 +357,11 @@ pnpm docker:app          # Application only
 ### Payment Integration
 - **Polar.sh integration** - Seamless payment processing
 - **Multiple subscription types** - Monthly, yearly, lifetime
+- **Customer management** - Automatic customer creation
+- **Error handling** - Graceful degradation for payment failures
+
+This documentation provides the foundation for understanding and contributing to the Polar SaaS Kit project. All paths are relative to the workspace root for easy navigation.
+
 - **Customer management** - Automatic customer creation
 - **Error handling** - Graceful degradation for payment failures
 

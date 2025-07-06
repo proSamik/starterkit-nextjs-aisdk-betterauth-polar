@@ -1,8 +1,3 @@
----
-description: 
-globs: 
-alwaysApply: true
----
 # Polar SaaS Kit - Cursor AI Development Rules
 # Updated: January 2025
 
@@ -21,6 +16,7 @@ alwaysApply: true
 - **PostgreSQL + Drizzle ORM** for database (NO Prisma)
 - **Tailwind CSS 4.1.8** for styling (NO other CSS frameworks)
 - **Biome** for linting/formatting (NO ESLint + Prettier)
+- **Vercel AI SDK** for AI chat integration (NO custom AI implementations)
 
 ### 2. Project Structure Constraints
 
@@ -63,6 +59,21 @@ src/components/
 └── settings.tsx     # Settings with theme selection
 ```
 
+#### AI Chat Components (FOLLOW EXACT PATTERNS)
+```
+src/components/chat/
+├── chat.tsx           # Main chat interface - EXTEND FOR FEATURES
+├── chat-list.tsx      # Message list component
+└── tool-display.tsx   # AI tool display component
+```
+
+#### AI Models & Tools (USE THESE)
+```
+src/lib/ai-models/
+├── index.ts          # Model configurations
+└── tools/           # Custom AI tools
+```
+
 ### 3. Development Rules & Constraints
 
 #### ALWAYS Follow These Patterns:
@@ -72,6 +83,7 @@ src/components/
 4. **Database**: Use repositories, never direct Drizzle calls in components
 5. **Error Handling**: Use Sonner toasts for user feedback
 6. **Styling**: Use theme-aware Tailwind classes only
+7. **AI Chat**: Use Vercel AI SDK hooks and utilities
 
 #### NEVER Do These:
 1. **DON'T** modify Better Auth Polar plugin configuration
@@ -80,6 +92,7 @@ src/components/
 4. **DON'T** bypass authentication checks
 5. **DON'T** modify the error filtering in auth client
 6. **DON'T** use any other payment provider than Polar
+7. **DON'T** implement custom AI streaming or file handling
 
 #### Code Quality Requirements:
 1. **ALL functions must have JSDoc comments**
@@ -111,6 +124,11 @@ src/components/
 - `pricing-section.tsx` - Pricing tiers with Polar integration
 - `faq-section.tsx` - FAQ accordion
 - `footer-section.tsx` - Footer with social links
+
+#### Chat Components (src/components/chat/) - EXTEND THESE:
+- `chat.tsx` - Main chat interface with file upload
+- `chat-list.tsx` - Message list with markdown support
+- `tool-display.tsx` - AI tool display component
 
 #### Utility Libraries (src/lib/) - USE THESE:
 - `utils.ts` - Common utilities (cn, formatters)
@@ -608,6 +626,11 @@ pnpm docker:app          # Application only
 
 ### Payment Integration
 - **Polar.sh integration** - Seamless payment processing
+- **Multiple subscription types** - Monthly, yearly, lifetime
+- **Customer management** - Automatic customer creation
+- **Error handling** - Graceful degradation for payment failures
+
+This documentation provides the foundation for understanding and contributing to the Polar SaaS Kit project. All paths are relative to the workspace root for easy navigation. 
 - **Multiple subscription types** - Monthly, yearly, lifetime
 - **Customer management** - Automatic customer creation
 - **Error handling** - Graceful degradation for payment failures

@@ -12,6 +12,7 @@
 - 🔐 **Better Auth 1.2.8** - Authentication with OAuth and sessions
 - 🗄️ **PostgreSQL + Drizzle ORM** - Type-safe database operations
 - 🎨 **20+ Theme Variants** - Beautiful theming system with dark mode
+- 🤖 **Vercel AI SDK** - Advanced AI chat capabilities
 - 🏢 **Production-Ready** - Sidebar navigation, user management, premium features
 
 Perfect for SaaS applications, premium tools, and any web app that needs user accounts with subscription management.
@@ -38,6 +39,16 @@ Perfect for SaaS applications, premium tools, and any web app that needs user ac
 - Theme-aware components using CSS custom properties
 - Dark/light mode support for all themes
 - Mobile-first responsive design
+
+### 🤖 **AI Chat Integration**
+- Advanced chat interface with AI model support
+- Multiple model selection (Claude, GPT-4, etc.)
+- File upload support for images and text
+- Real-time streaming responses
+- Rich markdown rendering
+- Drag & drop file handling
+- Clipboard paste support
+- Customizable chat UI components
 
 ### 🏢 **Production Features**
 - Dashboard with subscription status and analytics
@@ -141,11 +152,10 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
 
 #### ⚙️ **Optional - Additional Settings**
 ```env
-# Disable user registration (default: false)
-DISABLE_SIGN_UP=false
-
-# Allow non-HTTPS cookies for local development
-NO_HTTPS=true
+# AI Model Configuration
+OPENAI_API_KEY=sk-xxxxxxxxxxxxx  # For GPT-4 support
+ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxx  # For Claude support
+GOOGLE_API_KEY=xxxxxxxxxxxxx  # For Gemini support
 ```
 
 ### 4. Database Setup
@@ -255,10 +265,15 @@ aisdk-starter/
         - app/
       - api/
         - auth/
+        - chat/           # AI chat API routes
       - pricing/
       - page.tsx
       - layout.tsx
     - components/
+      - chat/            # Chat components
+        - chat.tsx       # Main chat interface
+        - chat-list.tsx  # Chat message list
+        - tool-display.tsx # AI tool display
       - landing/
       - layouts/
       - magicui/
@@ -267,6 +282,8 @@ aisdk-starter/
       - profile.tsx
       - settings.tsx
     - lib/
+      - ai-models/      # AI model configurations
+      - ai-tools/       # Custom AI tools
       - auth/
       - db/
       - cache/
@@ -285,7 +302,7 @@ aisdk-starter/
   - scripts/
 ```
 
-## �� Theme System
+## 🎨 Theme System
 
 This starter includes **20+ beautiful themes** with full dark mode support:
 
