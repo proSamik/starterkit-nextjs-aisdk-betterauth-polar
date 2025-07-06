@@ -27,9 +27,9 @@ import { toast } from "sonner";
 export default function ForgotPasswordPage() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
-  
+
   const [step, setStep] = useState<"email" | "success" | "reset">(
-    token ? "reset" : "email"
+    token ? "reset" : "email",
   );
   const [state, setState] = useObjectState({
     email: "",
@@ -214,7 +214,8 @@ export default function ForgotPasswordPage() {
                 </p>
                 <p className="font-medium">{state.email}</p>
                 <p className="text-sm text-muted-foreground">
-                  Click the link in the email to reset your password. The link will expire in 5 minutes.
+                  Click the link in the email to reset your password. The link
+                  will expire in 5 minutes.
                 </p>
               </div>
               <div className="space-y-2">
@@ -262,14 +263,18 @@ export default function ForgotPasswordPage() {
                   type="password"
                   placeholder="Confirm new password"
                   value={state.confirmPassword}
-                  onChange={(e) => setState({ confirmPassword: e.target.value })}
+                  onChange={(e) =>
+                    setState({ confirmPassword: e.target.value })
+                  }
                   onKeyDown={(e) => e.key === "Enter" && handleResetPassword()}
                   disabled={state.loading}
                 />
               </div>
               <Button
                 onClick={handleResetPassword}
-                disabled={state.loading || !state.password || !state.confirmPassword}
+                disabled={
+                  state.loading || !state.password || !state.confirmPassword
+                }
                 className="w-full"
               >
                 {state.loading && (

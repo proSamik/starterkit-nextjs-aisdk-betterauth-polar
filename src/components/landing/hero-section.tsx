@@ -59,8 +59,9 @@ export function HeroSection() {
             }}
             className="relative z-10 mx-auto max-w-xl py-4 text-center text-lg font-normal text-neutral-600"
           >
-            The complete Next.js starter kit with Polar.sh payments, Better Auth authentication, 
-            and Postgres database. Everything you need to launch your SaaS quickly.
+            The complete Next.js starter kit with Polar.sh payments, Better Auth
+            authentication, and Postgres database. Everything you need to launch
+            your SaaS quickly.
           </motion.p>
           <motion.div
             initial={{
@@ -112,7 +113,9 @@ export function HeroSection() {
                     <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                     <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                   </div>
-                  <div className="text-sm text-gray-500">Next.js Starter Kit</div>
+                  <div className="text-sm text-gray-500">
+                    Next.js Starter Kit
+                  </div>
                 </div>
 
                 {/* Feature Preview */}
@@ -122,30 +125,41 @@ export function HeroSection() {
                       <div className="w-12 h-12 bg-blue-600 rounded-lg mx-auto mb-2 flex items-center justify-center">
                         <span className="text-white text-lg">💳</span>
                       </div>
-                      <h3 className="font-semibold text-sm text-gray-800">Polar.sh</h3>
-                      <p className="text-xs text-gray-600 mt-1">Payments & Billing</p>
+                      <h3 className="font-semibold text-sm text-gray-800">
+                        Polar.sh
+                      </h3>
+                      <p className="text-xs text-gray-600 mt-1">
+                        Payments & Billing
+                      </p>
                     </div>
-                    
+
                     <div className="text-center p-4 bg-green-50 rounded-lg">
                       <div className="w-12 h-12 bg-green-600 rounded-lg mx-auto mb-2 flex items-center justify-center">
                         <span className="text-white text-lg">🔐</span>
                       </div>
-                      <h3 className="font-semibold text-sm text-gray-800">Better Auth</h3>
-                      <p className="text-xs text-gray-600 mt-1">Authentication</p>
+                      <h3 className="font-semibold text-sm text-gray-800">
+                        Better Auth
+                      </h3>
+                      <p className="text-xs text-gray-600 mt-1">
+                        Authentication
+                      </p>
                     </div>
-                    
+
                     <div className="text-center p-4 bg-purple-50 rounded-lg">
                       <div className="w-12 h-12 bg-purple-600 rounded-lg mx-auto mb-2 flex items-center justify-center">
                         <span className="text-white text-lg">🗄️</span>
                       </div>
-                      <h3 className="font-semibold text-sm text-gray-800">Postgres</h3>
+                      <h3 className="font-semibold text-sm text-gray-800">
+                        Postgres
+                      </h3>
                       <p className="text-xs text-gray-600 mt-1">Drizzle ORM</p>
                     </div>
                   </div>
-                  
+
                   <div className="text-center">
                     <p className="text-sm text-gray-600">
-                      Everything you need to build and deploy modern web applications
+                      Everything you need to build and deploy modern web
+                      applications
                     </p>
                   </div>
                 </div>

@@ -17,7 +17,7 @@ interface SidebarContextProps {
 }
 
 const SidebarContext = createContext<SidebarContextProps | undefined>(
-  undefined
+  undefined,
 );
 
 export const useSidebar = () => {
@@ -89,7 +89,7 @@ export const DesktopSidebar = ({
       <motion.div
         className={cn(
           "fixed left-0 top-0 h-screen px-4 py-4 hidden md:flex md:flex-col bg-sidebar w-[300px] shrink-0 z-10",
-          className
+          className,
         )}
         animate={{
           width: animate ? (open ? "300px" : "60px") : "300px",
@@ -118,7 +118,7 @@ export const MobileSidebar = ({
     <>
       <div
         className={cn(
-          "h-10 px-4 py-4 flex flex-row md:hidden  items-center justify-between bg-sidebar w-full"
+          "h-10 px-4 py-4 flex flex-row md:hidden  items-center justify-between bg-sidebar w-full",
         )}
         {...props}
       >
@@ -140,7 +140,7 @@ export const MobileSidebar = ({
               }}
               className={cn(
                 "fixed min-h-full w-full inset-0 bg-background p-10 z-[100] flex flex-col justify-between",
-                className
+                className,
               )}
             >
               <div
@@ -161,18 +161,20 @@ export const MobileSidebar = ({
 export const SidebarLink = ({
   link,
   className,
+  as: Component = "a",
   ...props
 }: {
   link: Links;
   className?: string;
+  as?: React.ElementType;
 }) => {
   const { open, animate } = useSidebar();
   return (
-    <a
+    <Component
       href={link.href}
       className={cn(
         "flex items-center justify-start gap-2  group/sidebar py-2",
-        className
+        className,
       )}
       {...props}
     >
@@ -187,6 +189,6 @@ export const SidebarLink = ({
       >
         {link.label}
       </motion.span>
-    </a>
+    </Component>
   );
 };

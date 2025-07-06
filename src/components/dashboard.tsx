@@ -10,15 +10,15 @@ import {
 } from "ui/card";
 import { Badge } from "ui/badge";
 import { Button } from "ui/button";
-import { 
-  LayoutDashboard, 
-  Users, 
-  Activity, 
-  TrendingUp, 
+import {
+  LayoutDashboard,
+  Users,
+  Activity,
+  TrendingUp,
   Calendar,
   ArrowUpRight,
   ArrowDownRight,
-  RefreshCw
+  RefreshCw,
 } from "lucide-react";
 import { useUser, useLoading, useNotifications } from "../app/store";
 
@@ -36,17 +36,17 @@ export function Dashboard() {
   const handleRefresh = async () => {
     setLoading(true);
     addNotification({
-      type: 'info',
-      message: 'Refreshing dashboard data...'
+      type: "info",
+      message: "Refreshing dashboard data...",
     });
 
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     setLoading(false);
     addNotification({
-      type: 'success',
-      message: 'Dashboard data refreshed successfully'
+      type: "success",
+      message: "Dashboard data refreshed successfully",
     });
   };
 
@@ -56,8 +56,8 @@ export function Dashboard() {
   useEffect(() => {
     if (user.id && user.name) {
       addNotification({
-        type: 'info',
-        message: `Welcome back, ${user.name}!`
+        type: "info",
+        message: `Welcome back, ${user.name}!`,
       });
     }
   }, [user.id, user.name, addNotification]);
@@ -71,17 +71,20 @@ export function Dashboard() {
             Dashboard
           </h1>
           <p className="text-muted-foreground">
-            {user.name ? `Welcome back, ${user.name}!` : 'Welcome back!'} Here&apos;s what&apos;s happening with your account.
+            {user.name ? `Welcome back, ${user.name}!` : "Welcome back!"}{" "}
+            Here&apos;s what&apos;s happening with your account.
           </p>
         </div>
-        <Button 
-          onClick={handleRefresh} 
+        <Button
+          onClick={handleRefresh}
           disabled={isLoading}
           variant="outline"
           size="sm"
         >
-          <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-          {isLoading ? 'Refreshing...' : 'Refresh'}
+          <RefreshCw
+            className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+          />
+          {isLoading ? "Refreshing..." : "Refresh"}
         </Button>
       </div>
 
@@ -103,7 +106,9 @@ export function Dashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Sessions</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Active Sessions
+            </CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -131,7 +136,9 @@ export function Dashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Events This Month</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Events This Month
+            </CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -160,32 +167,32 @@ export function Dashboard() {
                   action: "User signed up",
                   user: "john.doe@example.com",
                   time: "2 minutes ago",
-                  type: "success"
+                  type: "success",
                 },
                 {
                   action: "Payment processed",
-                  user: "jane.smith@example.com", 
+                  user: "jane.smith@example.com",
                   time: "5 minutes ago",
-                  type: "info"
+                  type: "info",
                 },
                 {
                   action: "Profile updated",
                   user: "mike.johnson@example.com",
                   time: "12 minutes ago",
-                  type: "default"
+                  type: "default",
                 },
                 {
                   action: "Login failed",
                   user: "suspicious.user@example.com",
                   time: "15 minutes ago",
-                  type: "warning"
+                  type: "warning",
                 },
                 {
                   action: "New subscription",
                   user: "sarah.wilson@example.com",
                   time: "1 hour ago",
-                  type: "success"
-                }
+                  type: "success",
+                },
               ].map((activity, index) => (
                 <div key={index} className="flex items-center space-x-4">
                   <div className="flex-1 space-y-1">
@@ -197,11 +204,15 @@ export function Dashboard() {
                     </p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Badge 
+                    <Badge
                       variant={
-                        activity.type === "success" ? "default" :
-                        activity.type === "warning" ? "destructive" :
-                        activity.type === "info" ? "secondary" : "outline"
+                        activity.type === "success"
+                          ? "default"
+                          : activity.type === "warning"
+                            ? "destructive"
+                            : activity.type === "info"
+                              ? "secondary"
+                              : "outline"
                       }
                     >
                       {activity.type}
@@ -219,27 +230,33 @@ export function Dashboard() {
         <Card className="col-span-3">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>
-              Common tasks and shortcuts
-            </CardDescription>
+            <CardDescription>Common tasks and shortcuts</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-2">
               <div className="p-3 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors">
                 <h4 className="font-medium">Create New User</h4>
-                <p className="text-sm text-muted-foreground">Add a new user to your organization</p>
+                <p className="text-sm text-muted-foreground">
+                  Add a new user to your organization
+                </p>
               </div>
               <div className="p-3 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors">
                 <h4 className="font-medium">Generate Report</h4>
-                <p className="text-sm text-muted-foreground">Create analytics and usage reports</p>
+                <p className="text-sm text-muted-foreground">
+                  Create analytics and usage reports
+                </p>
               </div>
               <div className="p-3 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors">
                 <h4 className="font-medium">System Settings</h4>
-                <p className="text-sm text-muted-foreground">Configure system preferences</p>
+                <p className="text-sm text-muted-foreground">
+                  Configure system preferences
+                </p>
               </div>
               <div className="p-3 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors">
                 <h4 className="font-medium">View Analytics</h4>
-                <p className="text-sm text-muted-foreground">Deep dive into usage statistics</p>
+                <p className="text-sm text-muted-foreground">
+                  Deep dive into usage statistics
+                </p>
               </div>
             </div>
           </CardContent>
@@ -268,4 +285,4 @@ export function Dashboard() {
       </Card>
     </div>
   );
-} 
+}

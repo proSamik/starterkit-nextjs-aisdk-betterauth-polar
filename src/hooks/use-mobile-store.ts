@@ -15,4 +15,4 @@ export function useMobileStore() {
   }, [isMobile, setMobile]);
 
   return isMobile;
-} 
+}

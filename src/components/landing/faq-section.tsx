@@ -67,8 +67,8 @@ export function FAQSection() {
             Frequently Asked Questions
           </h2>
           <p className="text-lg text-gray-600 leading-relaxed">
-            Everything you need to know about our Next.js starter kit. Can&apos;t find what
-            you&apos;re looking for?
+            Everything you need to know about our Next.js starter kit.
+            Can&apos;t find what you&apos;re looking for?
             <a href="/app" className="text-blue-600 hover:text-blue-700 ml-1">
               Contact our support team.
             </a>
@@ -114,8 +114,8 @@ export function FAQSection() {
               Need help getting started?
             </h3>
             <p className="text-gray-600 mb-8 leading-relaxed">
-              Can&apos;t find the answer you&apos;re looking for? Check our documentation
-              or reach out for technical support.
+              Can&apos;t find the answer you&apos;re looking for? Check our
+              documentation or reach out for technical support.
             </p>
             <a
               href="/app"

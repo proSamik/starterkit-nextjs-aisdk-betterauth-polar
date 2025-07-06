@@ -175,8 +175,8 @@ export default function PrivacyPolicyPage() {
             </h2>
             <p className="text-gray-700 leading-relaxed">
               If you have any questions about this Privacy Policy or our
-                              practices, please contact us at privacy@your-domain.com or write to us
-              at our mailing address.
+              practices, please contact us at privacy@your-domain.com or write
+              to us at our mailing address.
             </p>
           </section>
         </div>

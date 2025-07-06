@@ -9,7 +9,10 @@ import { validateLocale, getDefaultLocale } from "./locale-utils";
  */
 async function getLocaleFromCookie(): Promise<string | undefined> {
   // Only access cookies in server-side runtime environments
-  if (process.env.NEXT_RUNTIME !== 'nodejs' && process.env.NEXT_RUNTIME !== 'edge') {
+  if (
+    process.env.NEXT_RUNTIME !== "nodejs" &&
+    process.env.NEXT_RUNTIME !== "edge"
+  ) {
     return undefined;
   }
 
@@ -30,7 +33,10 @@ async function getLocaleFromCookie(): Promise<string | undefined> {
  */
 async function getLocalFromHeader(): Promise<string | undefined> {
   // Only access headers in server-side runtime environments
-  if (process.env.NEXT_RUNTIME !== 'nodejs' && process.env.NEXT_RUNTIME !== 'edge') {
+  if (
+    process.env.NEXT_RUNTIME !== "nodejs" &&
+    process.env.NEXT_RUNTIME !== "edge"
+  ) {
     return undefined;
   }
 

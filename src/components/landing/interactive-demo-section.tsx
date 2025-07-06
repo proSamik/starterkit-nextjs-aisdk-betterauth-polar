@@ -71,8 +71,9 @@ export function InteractiveDemoSection() {
             Everything You Need Included
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Skip months of setup and start building your SaaS with our comprehensive 
-            Next.js starter kit. All the essential features are ready to go.
+            Skip months of setup and start building your SaaS with our
+            comprehensive Next.js starter kit. All the essential features are
+            ready to go.
           </p>
         </div>
 

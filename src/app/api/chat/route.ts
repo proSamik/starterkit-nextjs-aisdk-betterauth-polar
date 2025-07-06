@@ -1,15 +1,21 @@
 import { getSession } from "@/lib/auth/server";
-import { createOpenAI } from "@ai-sdk/openai";
+import { MODELS, ModelId } from "@/lib/ai-models";
 import { convertToCoreMessages, streamText, UIMessage } from "ai";
 import { NextRequest, NextResponse } from "next/server";
+import { calculatorTool } from "@/lib/ai-tools/calculator";
+import { chartGeneratorTool } from "@/lib/ai-tools/chart-generator";
 
 if (!process.env.OPENAI_API_KEY) {
-  console.warn("OPENAI_API_KEY is not set. The chat API will not work.");
+  console.warn(
+    "OPENAI_API_KEY is not set. The chat API will not work for OpenAI models.",
+  );
 }
 
-const openai = createOpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+if (!process.env.ANTHROPIC_API_KEY) {
+  console.warn(
+    "ANTHROPIC_API_KEY is not set. The chat API will not work for Anthropic models.",
+  );
+}
 
 export async function POST(req: NextRequest) {
   const session = await getSession();
@@ -18,17 +24,43 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
-  if (!process.env.OPENAI_API_KEY) {
-    return NextResponse.json({ error: "Missing API Key" }, { status: 500 });
+  const {
+    messages,
+    data,
+  }: { messages: UIMessage[]; data: { model: ModelId } } = await req.json();
+
+  const modelId = data.model;
+
+  if (!modelId || !MODELS[modelId]) {
+    return NextResponse.json(
+      { error: "Invalid model selected" },
+      { status: 400 },
+    );
   }
 
-  const { messages }: { messages: UIMessage[] } = await req.json();
+  if (modelId.startsWith("claude") && !process.env.ANTHROPIC_API_KEY) {
+    return NextResponse.json(
+      { error: "Missing API Key for Anthropic" },
+      { status: 500 },
+    );
+  }
 
-  const result = streamText({
-    model: openai("gpt-4o"),
+  if (modelId.startsWith("gpt") && !process.env.OPENAI_API_KEY) {
+    return NextResponse.json(
+      { error: "Missing API Key for OpenAI" },
+      { status: 500 },
+    );
+  }
+
+  const result = await streamText({
+    model: MODELS[modelId],
     system:
       "do not respond on markdown or lists, keep your responses brief, you can ask the user to upload images or documents if it could help you understand the problem better",
     messages: convertToCoreMessages(messages),
+    tools: {
+      calculate: calculatorTool,
+      generateChart: chartGeneratorTool,
+    },
   });
 
   return result.toDataStreamResponse();

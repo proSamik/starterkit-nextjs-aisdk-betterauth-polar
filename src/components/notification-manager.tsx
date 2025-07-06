@@ -17,8 +17,10 @@ export function NotificationManager() {
   useEffect(() => {
     notifications.forEach((notification) => {
       // Check if we've already shown this notification
-      const hasBeenShown = localStorage.getItem(`notification-${notification.id}`);
-      
+      const hasBeenShown = localStorage.getItem(
+        `notification-${notification.id}`,
+      );
+
       if (!hasBeenShown) {
         // Show the toast based on notification type
         toast[notification.type](notification.message, {
@@ -29,8 +31,8 @@ export function NotificationManager() {
         });
 
         // Mark as shown
-        localStorage.setItem(`notification-${notification.id}`, 'true');
-        
+        localStorage.setItem(`notification-${notification.id}`, "true");
+
         // Clean up localStorage entry after removal
         setTimeout(() => {
           localStorage.removeItem(`notification-${notification.id}`);
@@ -50,9 +52,9 @@ export function useToastNotifications() {
   const { add } = useNotifications();
 
   return {
-    success: (message: string) => add({ type: 'success', message }),
-    error: (message: string) => add({ type: 'error', message }),
-    warning: (message: string) => add({ type: 'warning', message }),
-    info: (message: string) => add({ type: 'info', message }),
+    success: (message: string) => add({ type: "success", message }),
+    error: (message: string) => add({ type: "error", message }),
+    warning: (message: string) => add({ type: "warning", message }),
+    info: (message: string) => add({ type: "info", message }),
   };
-} 
+}

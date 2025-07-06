@@ -23,7 +23,7 @@ export function LanguageSelector() {
     });
   };
 
-  const currentLocale = SUPPORTED_LOCALES.find(l => l.code === locale);
+  const currentLocale = SUPPORTED_LOCALES.find((l) => l.code === locale);
 
   return (
     <div className="flex items-center gap-2">
@@ -34,16 +34,11 @@ export function LanguageSelector() {
         disabled={isPending}
       >
         <SelectTrigger className="w-auto border-none bg-transparent p-0 h-auto text-sm">
-          <SelectValue>
-            {currentLocale?.name || "English 🇺🇸"}
-          </SelectValue>
+          <SelectValue>{currentLocale?.name || "English 🇺🇸"}</SelectValue>
         </SelectTrigger>
         <SelectContent>
           {SUPPORTED_LOCALES.map((supportedLocale) => (
-            <SelectItem
-              key={supportedLocale.code}
-              value={supportedLocale.code}
-            >
+            <SelectItem key={supportedLocale.code} value={supportedLocale.code}>
               {supportedLocale.name}
             </SelectItem>
           ))}
@@ -51,4 +46,4 @@ export function LanguageSelector() {
       </Select>
     </div>
   );
-} 
+}

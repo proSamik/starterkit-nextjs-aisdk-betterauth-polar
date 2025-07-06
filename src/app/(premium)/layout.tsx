@@ -1,6 +1,6 @@
 "use client";
 
-import { redirect } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import { authClient, enhancedAuthClient } from "auth/client";
 import { AppSidebar } from "@/components/layouts/app-sidebar";
@@ -116,9 +116,8 @@ function useUserTier() {
 function PremiumLayoutContent({ children }: { children: React.ReactNode }) {
   const { data: session, isPending: isAuthLoading } = authClient.useSession();
   const { userTier, isLoading: isTierLoading } = useUserTier();
-  const [currentPage, setCurrentPage] = useState<
-    "dashboard" | "chat" | "profile" | "settings" | "subscription"
-  >("dashboard");
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab") || "dashboard";
 
   // Redirect to sign-in if not authenticated
   useEffect(() => {
@@ -127,18 +126,12 @@ function PremiumLayoutContent({ children }: { children: React.ReactNode }) {
     }
   }, [session, isAuthLoading]);
 
-  const handleNavigation = (
-    page: "dashboard" | "chat" | "profile" | "settings" | "subscription",
-  ) => {
-    setCurrentPage(page);
-  };
-
   const renderContent = () => {
-    switch (currentPage) {
+    switch (tab) {
       case "dashboard":
         return children; // Render the original dashboard page
       case "chat":
-        return <Chat />;
+        return <Chat model="claude-3-5-sonnet-latest" />;
       case "profile":
         return <Profile />;
       case "settings":
@@ -147,7 +140,7 @@ function PremiumLayoutContent({ children }: { children: React.ReactNode }) {
         return (
           <SubscriptionManagement
             currentTier={userTier}
-            onBack={() => setCurrentPage("dashboard")}
+            onBack={() => (window.location.href = "/app?tab=dashboard")}
           />
         );
       default:
@@ -167,9 +160,7 @@ function PremiumLayoutContent({ children }: { children: React.ReactNode }) {
   return (
     <>
       <NotificationManager />
-      <AppSidebar onNavigate={handleNavigation} userTier={userTier}>
-        {renderContent()}
-      </AppSidebar>
+      <AppSidebar userTier={userTier}>{renderContent()}</AppSidebar>
     </>
   );
 }

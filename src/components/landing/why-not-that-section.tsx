@@ -9,8 +9,8 @@ export function WhyNotThatSection() {
             Why choose our starter kit?
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Building from scratch takes months. Our complete starter kit gets you 
-            from idea to production-ready app in days, not weeks.
+            Building from scratch takes months. Our complete starter kit gets
+            you from idea to production-ready app in days, not weeks.
           </p>
         </div>
 
@@ -66,7 +66,9 @@ export function WhyNotThatSection() {
               <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mr-3">
                 <Check className="h-5 w-5 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-blue-800">Our Starter Kit</h3>
+              <h3 className="text-xl font-bold text-blue-800">
+                Our Starter Kit
+              </h3>
             </div>
 
             <ul className="space-y-6">

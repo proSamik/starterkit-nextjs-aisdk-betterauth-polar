@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Sidebar, SidebarBody, SidebarLink } from "ui/sidebar";
 import {
   IconArrowLeft,
@@ -27,13 +28,9 @@ type UserTier = "free" | "monthly" | "yearly" | "lifetime";
  */
 export function AppSidebar({
   children,
-  onNavigate,
   userTier = "free",
 }: {
   children: React.ReactNode;
-  onNavigate: (
-    page: "dashboard" | "chat" | "profile" | "settings" | "subscription",
-  ) => void;
   userTier?: UserTier;
 }) {
   const { data: session } = authClient.useSession();
@@ -105,13 +102,13 @@ export function AppSidebar({
    * Handle subscription management by navigating to subscription page
    */
   const handleSubscriptionManagement = () => {
-    onNavigate("subscription");
+    // This should probably open the polar portal
   };
 
   const links = [
     {
       label: "Dashboard",
-      href: "#",
+      href: "/app?tab=dashboard",
       icon: (
         <div className="flex items-center gap-2">
           <IconBrandTabler className="h-5 w-5 shrink-0 text-sidebar-foreground" />
@@ -121,21 +118,21 @@ export function AppSidebar({
     },
     {
       label: "Chat",
-      href: "#",
+      href: "/app?tab=chat",
       icon: (
         <IconMessage className="h-5 w-5 shrink-0 text-sidebar-foreground" />
       ),
     },
     {
       label: "Profile",
-      href: "#",
+      href: "/app?tab=profile",
       icon: (
         <IconUserBolt className="h-5 w-5 shrink-0 text-sidebar-foreground" />
       ),
     },
     {
       label: "Settings",
-      href: "#",
+      href: "/app?tab=settings",
       icon: (
         <IconSettings className="h-5 w-5 shrink-0 text-sidebar-foreground" />
       ),
@@ -143,6 +140,7 @@ export function AppSidebar({
     {
       label: "Manage Subscription",
       href: "#",
+      onClick: handleSubscriptionManagement,
       icon: (
         <IconCreditCard className="h-5 w-5 shrink-0 text-sidebar-foreground" />
       ),
@@ -150,6 +148,7 @@ export function AppSidebar({
     {
       label: "Logout",
       href: "#",
+      onClick: handleSignOut,
       icon: (
         <IconArrowLeft className="h-5 w-5 shrink-0 text-sidebar-foreground" />
       ),
@@ -191,37 +190,33 @@ export function AppSidebar({
 
               <div className="mt-6 flex flex-col gap-2">
                 {links.map((link, idx) => {
-                  const isLogout = link.label === "Logout";
-                  const isSubscription = link.label === "Manage Subscription";
+                  const isSpecialLink = link.onClick;
+                  const linkComponent = <SidebarLink link={link} as="div" />;
+
+                  if (isSpecialLink) {
+                    return (
+                      <div
+                        key={idx}
+                        onClick={link.onClick}
+                        className="cursor-pointer"
+                      >
+                        {linkComponent}
+                      </div>
+                    );
+                  }
+
                   return (
-                    <div
-                      key={idx}
-                      onClick={() => {
-                        if (isLogout) {
-                          handleSignOut();
-                        } else if (isSubscription) {
-                          handleSubscriptionManagement();
-                        } else {
-                          onNavigate(
-                            link.label.toLowerCase() as
-                              | "dashboard"
-                              | "chat"
-                              | "profile"
-                              | "settings"
-                              | "subscription",
-                          );
-                        }
-                      }}
-                      className="cursor-pointer"
-                    >
-                      <SidebarLink link={link} />
-                    </div>
+                    <Link href={link.href} key={idx} passHref>
+                      {linkComponent}
+                    </Link>
                   );
                 })}
               </div>
             </div>
             <div
-              onClick={() => onNavigate("profile")}
+              onClick={() => {
+                // This should probably open the polar portal
+              }}
               className="cursor-pointer"
             >
               <SidebarLink

@@ -17,8 +17,9 @@ export function CTASection() {
           </h2>
 
           <p className="text-lg md:text-xl text-blue-100 mb-16 max-w-2xl mx-auto leading-relaxed">
-            Start building modern web applications today with our complete Next.js 
-            starter kit featuring payments, authentication, and database.
+            Start building modern web applications today with our complete
+            Next.js starter kit featuring payments, authentication, and
+            database.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
@@ -56,7 +57,9 @@ export function CTASection() {
               <div className="text-2xl font-bold text-white mb-2">🚀</div>
               <div className="text-blue-100">
                 <div className="font-semibold">Deploy Anywhere</div>
-                <div className="text-sm">Vercel, Docker, or your infrastructure</div>
+                <div className="text-sm">
+                  Vercel, Docker, or your infrastructure
+                </div>
               </div>
             </div>
           </div>

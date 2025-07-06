@@ -37,7 +37,7 @@ export function Profile() {
     setFormData({
       name: storeUser?.name || session?.user?.name || "",
       email: storeUser?.email || session?.user?.email || "",
-     });
+    });
   }, [storeUser, session]);
 
   const user = session?.user;
@@ -55,7 +55,7 @@ export function Profile() {
         name: formData.name,
         email: formData.email,
       });
-      
+
       toastNotifications.success("Profile updated successfully!");
       setIsEditing(false);
     } catch (error) {
@@ -132,8 +132,12 @@ export function Profile() {
               </AvatarFallback>
             </Avatar>
             <div className="space-y-1">
-              <h3 className="text-lg font-medium">{storeUser?.name || user?.name}</h3>
-              <p className="text-sm text-muted-foreground">{storeUser?.email || user?.email}</p>
+              <h3 className="text-lg font-medium">
+                {storeUser?.name || user?.name}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {storeUser?.email || user?.email}
+              </p>
               {user?.createdAt && (
                 <p className="text-xs text-muted-foreground flex items-center gap-1">
                   <Calendar className="h-3 w-3" />
@@ -290,4 +294,4 @@ export function Profile() {
       </Card>
     </div>
   );
-} 
+}

@@ -9,8 +9,8 @@ export function DemoVideoSection() {
             See the Starter Kit in Action
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Watch how quickly you can set up authentication, payments, and database
-            to build production-ready web applications.
+            Watch how quickly you can set up authentication, payments, and
+            database to build production-ready web applications.
           </p>
         </div>
 
@@ -53,7 +53,9 @@ export function DemoVideoSection() {
         {/* Stats Below Video */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-20 max-w-4xl mx-auto">
           <div className="text-center">
-            <div className="text-2xl font-bold text-gray-900 mb-2">3 minutes</div>
+            <div className="text-2xl font-bold text-gray-900 mb-2">
+              3 minutes
+            </div>
             <div className="text-gray-600 text-sm">Setup Time</div>
           </div>
           <div className="text-center">

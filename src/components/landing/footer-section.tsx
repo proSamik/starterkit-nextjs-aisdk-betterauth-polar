@@ -27,11 +27,14 @@ export function FooterSection() {
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
                 <div className="text-white font-bold text-lg">N</div>
               </div>
-              <div className="text-xl font-bold text-gray-500">Next.js Starter</div>
+              <div className="text-xl font-bold text-gray-500">
+                Next.js Starter
+              </div>
             </div>
             <p className="text-gray-500 mb-6 leading-relaxed text-sm">
-              The complete Next.js starter kit with Polar.sh payments, Better Auth authentication, 
-              and Postgres database. Build modern web applications faster.
+              The complete Next.js starter kit with Polar.sh payments, Better
+              Auth authentication, and Postgres database. Build modern web
+              applications faster.
             </p>
             <div className="text-gray-500 text-sm mb-4">
               Copyright © 2025 - All rights reserved
@@ -42,7 +45,7 @@ export function FooterSection() {
                 className="text-gray-500 hover:text-gray-900 transition-colors"
               >
                 <FaXTwitter className="h-5 w-5" />
-              </a>  
+              </a>
               <a
                 href="https://github.com/prosamik"
                 className="text-gray-500 hover:text-gray-900 transition-colors"
@@ -146,7 +149,10 @@ export function FooterSection() {
             <span className="text-white text-xs">👋</span>
           </div>
           Hey Curious 👋 I&apos;m{" "}
-          <a href="https://prosamik.com" className="text-gray-500 underline mx-1 hover:text-gray-900">
+          <a
+            href="https://prosamik.com"
+            className="text-gray-500 underline mx-1 hover:text-gray-900"
+          >
             Samik
           </a>
           , the creator of this Next.js starter kit. You can follow my work on

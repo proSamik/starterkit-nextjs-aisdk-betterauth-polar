@@ -12,9 +12,21 @@ import {
 import { Button } from "ui/button";
 import { Switch } from "ui/switch";
 import { Label } from "ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "ui/select";
 import { Separator } from "ui/separator";
-import { Settings as SettingsIcon, Bell, Shield, Palette, Globe } from "lucide-react";
+import {
+  Settings as SettingsIcon,
+  Bell,
+  Shield,
+  Palette,
+  Globe,
+} from "lucide-react";
 import { BASE_THEMES } from "lib/const";
 import { usePreferences, useStoreActions } from "../app/store";
 import { toast } from "sonner";
@@ -32,7 +44,9 @@ export function Settings() {
    */
   const handlePreferenceChange = (key: string, value: any) => {
     updatePreferences({ [key]: value });
-    toast.success(`${key.charAt(0).toUpperCase() + key.slice(1)} updated successfully`);
+    toast.success(
+      `${key.charAt(0).toUpperCase() + key.slice(1)} updated successfully`,
+    );
   };
 
   return (
@@ -75,10 +89,14 @@ export function Settings() {
                 {BASE_THEMES.map((baseTheme) => (
                   <React.Fragment key={baseTheme}>
                     <SelectItem value={baseTheme}>
-                      {baseTheme.charAt(0).toUpperCase() + baseTheme.slice(1).replace(/-/g, ' ')} (Light)
+                      {baseTheme.charAt(0).toUpperCase() +
+                        baseTheme.slice(1).replace(/-/g, " ")}{" "}
+                      (Light)
                     </SelectItem>
                     <SelectItem value={`${baseTheme}-dark`}>
-                      {baseTheme.charAt(0).toUpperCase() + baseTheme.slice(1).replace(/-/g, ' ')} (Dark)
+                      {baseTheme.charAt(0).toUpperCase() +
+                        baseTheme.slice(1).replace(/-/g, " ")}{" "}
+                      (Dark)
                     </SelectItem>
                   </React.Fragment>
                 ))}
@@ -129,9 +147,11 @@ export function Settings() {
                 Show notifications on your desktop
               </div>
             </div>
-            <Switch 
+            <Switch
               checked={preferences.emailNotifications}
-              onCheckedChange={(checked) => handlePreferenceChange('emailNotifications', checked)}
+              onCheckedChange={(checked) =>
+                handlePreferenceChange("emailNotifications", checked)
+              }
             />
           </div>
 
@@ -142,9 +162,11 @@ export function Settings() {
                 Receive notifications via email
               </div>
             </div>
-            <Switch 
+            <Switch
               checked={preferences.marketingEmails}
-              onCheckedChange={(checked) => handlePreferenceChange('marketingEmails', checked)}
+              onCheckedChange={(checked) =>
+                handlePreferenceChange("marketingEmails", checked)
+              }
             />
           </div>
 
@@ -179,9 +201,11 @@ export function Settings() {
                 Choose your preferred language
               </div>
             </div>
-            <Select 
-              value={preferences.language} 
-              onValueChange={(value) => handlePreferenceChange('language', value)}
+            <Select
+              value={preferences.language}
+              onValueChange={(value) =>
+                handlePreferenceChange("language", value)
+              }
             >
               <SelectTrigger className="w-40">
                 <SelectValue />
@@ -278,4 +302,4 @@ export function Settings() {
       </div>
     </div>
   );
-} 
+}
