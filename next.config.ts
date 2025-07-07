@@ -24,6 +24,11 @@ export default () => {
           hostname: "avatars.githubusercontent.com", // GitHub profile images
           pathname: "**",
         },
+        {
+          protocol: "https",
+          hostname: "bucket.prosamik.com", // Cloudflare R2 bucket images
+          pathname: "**",
+        },
       ],
     },
   };
