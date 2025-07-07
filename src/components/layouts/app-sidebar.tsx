@@ -118,7 +118,7 @@ export function AppSidebar({
     },
     {
       label: "Chat",
-      href: "/app?tab=chat",
+      href: "/app/chat",
       icon: (
         <IconMessage className="h-5 w-5 shrink-0 text-sidebar-foreground" />
       ),
