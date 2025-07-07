@@ -8,7 +8,6 @@ import { Settings } from "@/components/settings";
 import { Profile } from "@/components/profile";
 import { SubscriptionManagement } from "@/components/subscription-management";
 import { NotificationManager } from "@/components/notification-manager";
-import Chat from "@/components/chat";
 
 type UserTier = "free" | "monthly" | "yearly" | "lifetime";
 
@@ -130,8 +129,6 @@ function PremiumLayoutContent({ children }: { children: React.ReactNode }) {
     switch (tab) {
       case "dashboard":
         return children; // Render the original dashboard page
-      case "chat":
-        return <Chat model="claude-3-5-sonnet-latest" />;
       case "profile":
         return <Profile />;
       case "settings":
