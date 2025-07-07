@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useState, useCallback } from "react";
+import Image from "next/image";
 
 interface FilePreviewProps {
   file: {
@@ -100,11 +101,13 @@ export function FilePreview({
 
           {/* Image */}
           {!imageError && !isUploading && (
-            <img
+            <Image
               src={file.url}
               alt={file.name}
+              layout="fill"
+              objectFit="contain"
               className={cn(
-                "w-full h-full object-contain min-h-[120px] transition-opacity duration-200",
+                "min-h-[120px] transition-opacity duration-200",
                 isLoading ? "opacity-0" : "opacity-100",
               )}
               onLoad={handleImageLoad}
