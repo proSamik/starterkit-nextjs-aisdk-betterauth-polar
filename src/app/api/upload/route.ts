@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { uploadFileToR2, isSupportedFileType } from "@/lib/cloudflare-r2";
+import { getSession } from "auth/server";
 
 /**
  * API route to handle file uploads to Cloudflare R2
  * Supports images and PDFs, returns public URLs
  */
 export async function POST(request: NextRequest) {
+  const session = await getSession();
+
+  if (!session?.user) {
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
+
   try {
     const formData = await request.formData();
     const files = formData.getAll("files") as File[];
