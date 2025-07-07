@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const result = await streamText({
+  const result = streamText({
     model: MODELS[modelId],
     system:
       "do not respond on markdown or lists, keep your responses brief, you can ask the user to upload images or documents if it could help you understand the problem better",
@@ -63,5 +63,23 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  return result.toDataStreamResponse();
+  return result.toDataStreamResponse({
+    sendSources: true,
+    sendReasoning: true,
+    getErrorMessage: (error) => {
+      if (error == null) {
+        return "unknown error";
+      }
+
+      if (typeof error === "string") {
+        return error;
+      }
+
+      if (error instanceof Error) {
+        return error.message;
+      }
+
+      return JSON.stringify(error);
+    },
+  });
 }
