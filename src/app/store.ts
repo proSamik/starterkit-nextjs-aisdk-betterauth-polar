@@ -1,6 +1,20 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { devtools } from "zustand/middleware";
+import { nanoid } from "nanoid";
+import type { UIMessage } from "ai";
+
+/**
+ * Chat thread interface for managing individual conversations
+ */
+export interface ChatThread {
+  id: string;
+  title?: string;
+  createdAt: number;
+  updatedAt: number;
+  messages: UIMessage[];
+  model?: string;
+}
 
 /**
  * User preferences interface
@@ -55,6 +69,12 @@ export interface AppState {
   // UI state
   ui: UIState;
 
+  // Chat state
+  chat: {
+    threads: Record<string, ChatThread>;
+    currentThreadId?: string;
+  };
+
   // Actions
   setUser: (user: Partial<AppState["user"]>) => void;
   updatePreferences: (preferences: Partial<UserPreferences>) => void;
@@ -68,6 +88,20 @@ export interface AppState {
   removeNotification: (id: string) => void;
   clearNotifications: () => void;
   resetState: () => void;
+
+  // Chat actions
+  createThread: (title?: string, model?: string) => ChatThread;
+  getThread: (threadId: string) => ChatThread | undefined;
+  updateThread: (
+    threadId: string,
+    updates: Partial<Omit<ChatThread, "id">>,
+  ) => void;
+  deleteThread: (threadId: string) => void;
+  setCurrentThread: (threadId: string) => void;
+  updateThreadMessages: (threadId: string, messages: UIMessage[]) => void;
+  getThreadMessages: (threadId: string) => UIMessage[];
+  getAllThreads: () => ChatThread[];
+  clearAllThreads: () => void;
 }
 
 /**
@@ -106,6 +140,10 @@ export const useAppStore = create<AppState>()(
         user: {},
         preferences: defaultPreferences,
         ui: defaultUIState,
+        chat: {
+          threads: {},
+          currentThreadId: undefined,
+        },
 
         // Actions
         setUser: (userData) => {
@@ -235,21 +273,187 @@ export const useAppStore = create<AppState>()(
               user: {},
               preferences: defaultPreferences,
               ui: defaultUIState,
+              chat: {
+                threads: {},
+                currentThreadId: undefined,
+              },
             },
             false,
             "resetState",
           );
         },
+
+        // Chat actions
+        createThread: (title?: string, model?: string) => {
+          const threadId = nanoid();
+          const now = Date.now();
+
+          const systemMessage: UIMessage = {
+            id: nanoid(),
+            role: "system",
+            content: "You are a helpful assistant. You have access to tools.",
+            parts: [
+              {
+                type: "text",
+                text: "You are a helpful assistant. You have access to tools.",
+              },
+            ],
+          };
+
+          const newThread: ChatThread = {
+            id: threadId,
+            title: title || "New Chat",
+            createdAt: now,
+            updatedAt: now,
+            messages: [systemMessage],
+            model: model || "gpt-4o", // Default to GPT-4o instead of Claude
+          };
+
+          set(
+            (state) => ({
+              chat: {
+                ...state.chat,
+                threads: {
+                  ...state.chat.threads,
+                  [threadId]: newThread,
+                },
+                currentThreadId: threadId,
+              },
+            }),
+            false,
+            "chat/createThread",
+          );
+
+          return newThread;
+        },
+
+        getThread: (threadId: string) => {
+          return get().chat.threads[threadId];
+        },
+
+        updateThread: (
+          threadId: string,
+          updates: Partial<Omit<ChatThread, "id">>,
+        ) => {
+          const currentThread = get().chat.threads[threadId];
+          if (!currentThread) return;
+
+          set(
+            (state) => ({
+              chat: {
+                ...state.chat,
+                threads: {
+                  ...state.chat.threads,
+                  [threadId]: {
+                    ...currentThread,
+                    ...updates,
+                    updatedAt: Date.now(),
+                  },
+                },
+              },
+            }),
+            false,
+            "chat/updateThread",
+          );
+        },
+
+        deleteThread: (threadId: string) => {
+          set(
+            (state) => {
+              const newThreads = { ...state.chat.threads };
+              delete newThreads[threadId];
+
+              return {
+                chat: {
+                  ...state.chat,
+                  threads: newThreads,
+                  currentThreadId:
+                    state.chat.currentThreadId === threadId
+                      ? undefined
+                      : state.chat.currentThreadId,
+                },
+              };
+            },
+            false,
+            "chat/deleteThread",
+          );
+        },
+
+        setCurrentThread: (threadId: string) => {
+          set(
+            (state) => ({
+              chat: {
+                ...state.chat,
+                currentThreadId: threadId,
+              },
+            }),
+            false,
+            "chat/setCurrentThread",
+          );
+        },
+
+        updateThreadMessages: (threadId: string, messages: UIMessage[]) => {
+          const currentThread = get().chat.threads[threadId];
+          if (!currentThread) return;
+
+          set(
+            (state) => ({
+              chat: {
+                ...state.chat,
+                threads: {
+                  ...state.chat.threads,
+                  [threadId]: {
+                    ...currentThread,
+                    messages,
+                    updatedAt: Date.now(),
+                  },
+                },
+              },
+            }),
+            false,
+            "chat/updateThreadMessages",
+          );
+        },
+
+        getThreadMessages: (threadId: string) => {
+          const thread = get().chat.threads[threadId];
+          return thread?.messages || [];
+        },
+
+        getAllThreads: () => {
+          const threads = get().chat.threads;
+          return Object.values(threads).sort(
+            (a, b) => b.updatedAt - a.updatedAt,
+          );
+        },
+
+        clearAllThreads: () => {
+          set(
+            (state) => ({
+              chat: {
+                ...state.chat,
+                threads: {},
+                currentThreadId: undefined,
+              },
+            }),
+            false,
+            "chat/clearAllThreads",
+          );
+        },
       }),
       {
         name: "polar-saas-kit-store",
-        // Only persist user preferences, not UI state
+        // Persist user preferences and chat threads
         partialize: (state) => ({
           user: state.user,
           preferences: state.preferences,
+          chat: {
+            threads: state.chat.threads,
+            currentThreadId: state.chat.currentThreadId,
+          },
         }),
         // Version for migration support
-        version: 1,
+        version: 2,
       },
     ),
     {
@@ -343,4 +547,62 @@ export const useStoreActions = () => {
   const resetState = useAppStore((state) => state.resetState);
 
   return { setUser, updatePreferences, setMobile, resetState };
+};
+
+/**
+ * Hook to get chat state and actions
+ */
+export const useChatStore = () => {
+  const threads = useAppStore((state) => state.chat.threads);
+  const currentThreadId = useAppStore((state) => state.chat.currentThreadId);
+  const createThread = useAppStore((state) => state.createThread);
+  const getThread = useAppStore((state) => state.getThread);
+  const updateThread = useAppStore((state) => state.updateThread);
+  const deleteThread = useAppStore((state) => state.deleteThread);
+  const setCurrentThread = useAppStore((state) => state.setCurrentThread);
+  const updateThreadMessages = useAppStore(
+    (state) => state.updateThreadMessages,
+  );
+  const getThreadMessages = useAppStore((state) => state.getThreadMessages);
+  const getAllThreads = useAppStore((state) => state.getAllThreads);
+  const clearAllThreads = useAppStore((state) => state.clearAllThreads);
+
+  return {
+    threads,
+    currentThreadId,
+    createThread,
+    getThread,
+    updateThread,
+    deleteThread,
+    setCurrentThread,
+    updateThreadMessages,
+    getThreadMessages,
+    getAllThreads,
+    clearAllThreads,
+  };
+};
+
+/**
+ * Hook to get a specific thread
+ */
+export const useThread = (threadId?: string) => {
+  const threads = useAppStore((state) => state.chat.threads);
+  return threadId ? threads[threadId] : undefined;
+};
+
+/**
+ * Hook to get all threads sorted by updatedAt
+ */
+export const useThreads = () => {
+  const threads = useAppStore((state) => state.chat.threads);
+  return Object.values(threads).sort((a, b) => b.updatedAt - a.updatedAt);
+};
+
+/**
+ * Hook to get current thread
+ */
+export const useCurrentThread = () => {
+  const currentThreadId = useAppStore((state) => state.chat.currentThreadId);
+  const threads = useAppStore((state) => state.chat.threads);
+  return currentThreadId ? threads[currentThreadId] : undefined;
 };
